@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#050d3b">
+<title>Join a party · Audioly</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100svh;display:grid;place-items:center;padding:24px;background:#050d3b;color:#f3f6ff;font:16px/1.6 system-ui,sans-serif}
+main{max-width:440px;text-align:center}img{width:120px;height:120px;border-radius:28px}h1{font-size:32px;line-height:1.15;margin:20px 0 14px}p{color:#bec9e8}code{display:block;font-size:30px;letter-spacing:.18em;margin:22px 0;color:#8df5e3}
+a{color:#9ceafa}a.join{display:block;background:#97f3e0;color:#05152e;border-radius:16px;padding:15px 24px;font-weight:700;text-decoration:none;margin:24px 0}a:focus-visible{outline:3px solid white;outline-offset:5px}[hidden]{display:none!important}.small{font-size:13px;overflow-wrap:anywhere}
+</style>
+<main>
+<img src="/assets/audioly-logo.png" alt="Audioly">
+<h1>Listen together.</h1>
+<p id="status" role="status">Checking your invite…</p>
+<code id="code" hidden></code>
+<a class="join" id="join" hidden>Open Audioly</a>
+<p class="small" id="server" hidden></p>
+<p>Have Audioly installed? Open the app to check whether this party is still active.</p>
+<a href="https://audioly.me">Visit Audioly</a>
+</main>
+<script>
+'use strict';
+const match = location.pathname.match(/^\/invite\/([A-Za-z0-9]{6})\/?$/);
+const status = document.getElementById('status');
+try {
+  if (!match) throw new Error('This invite link is invalid. Ask your friend for a new one.');
+  const code = match[1].toUpperCase();
+  const server = new URL(new URL(location.href).searchParams.get('server') || 'https://api.audioly.me');
+  if (!['https:', 'http:'].includes(server.protocol) || server.username || server.password) {
+    throw new Error('This invite has an invalid party server.');
+  }
+  const base = server.href.replace(/\/$/, '');
+  const encoded = encodeURIComponent(base);
+  const scheme = 'audioly://party/' + code + '?server=' + encoded;
+  document.getElementById('code').textContent = code;
+  document.getElementById('code').hidden = false;
+  const link = document.getElementById('join');
+  link.href = /Android/i.test(navigator.userAgent)
+    ? 'intent://party/' + code + '?server=' + encoded + '#Intent;scheme=audioly;end'
+    : scheme;
+  link.hidden = false;
+  status.textContent = 'You’re invited to a listening party.';
+  document.getElementById('server').textContent = 'Party server: ' + base;
+  document.getElementById('server').hidden = false;
+} catch (error) {
+  status.textContent = error.message;
+}
+</script>
+</html>

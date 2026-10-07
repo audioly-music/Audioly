@@ -1,0 +1,26 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.dev.audioly",
+      "sha256_cert_fingerprints": [
+        "0D:5F:CB:71:91:EE:B1:C1:82:0F:35:B3:D9:07:80:70:A0:6A:38:F2:95:D0:FE:ED:19:36:4F:CF:CD:61:03:8E"
+      ]
+    }
+  },
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.music.audioly",
+      "sha256_cert_fingerprints": [
+        "0D:5F:CB:71:91:EE:B1:C1:82:0F:35:B3:D9:07:80:70:A0:6A:38:F2:95:D0:FE:ED:19:36:4F:CF:CD:61:03:8E"
+      ]
+    }
+  }
+]

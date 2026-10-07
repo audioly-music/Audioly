@@ -1,0 +1,4 @@
+api.audioly.me {
+    encode gzip
+    reverse_proxy party:8000
+}

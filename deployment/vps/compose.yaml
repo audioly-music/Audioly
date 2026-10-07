@@ -1,0 +1,50 @@
+services:
+  party:
+    build:
+      context: ../../backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    mem_limit: 384m
+    cpus: 0.75
+    environment:
+      PORT: "8000"
+      GOMEMLIMIT: "256MiB"
+      GOMAXPROCS: "1"
+      JAM_TRUST_PROXY: "true"
+      JAM_MAX_PARTIES: "20"
+      JAM_MAX_MEMBERS: "5"
+      JAM_RATE_LIMIT_MAX_ENTRIES: "1000"
+      JAM_MAX_UPCOMING_QUEUE: "25"
+      JAM_CONNECTION_IDLE_MS: "900000"
+      JAM_ALLOWED_ORIGINS: "https://audioly.me,https://www.audioly.me"
+    expose:
+      - "8000"
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    mem_limit: 192m
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+volumes:
+  caddy_data:
+  caddy_config:

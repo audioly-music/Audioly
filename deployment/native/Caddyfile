@@ -1,0 +1,16 @@
+api.audioly.me {
+    encode gzip
+    reverse_proxy 127.0.0.1:8000
+}
+
+audioly.me, www.audioly.me {
+    root * /var/www/audioly
+    encode gzip
+    handle /invite/* {
+        rewrite * /invite.html
+        file_server
+    }
+    handle {
+        file_server
+    }
+}

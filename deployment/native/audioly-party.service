@@ -1,0 +1,34 @@
+[Unit]
+Description=Audioly Listen Together
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=audioly
+Group=audioly
+ExecStart=/opt/audioly/audioly-party
+Restart=on-failure
+RestartSec=3
+Environment=PORT=8000
+Environment=JAM_BIND_HOST=127.0.0.1
+Environment=JAM_TRUST_PROXY=true
+Environment=GOMEMLIMIT=192MiB
+Environment=GOMAXPROCS=1
+Environment=JAM_MAX_PARTIES=20
+Environment=JAM_MAX_MEMBERS=5
+Environment=JAM_RATE_LIMIT_MAX_ENTRIES=1000
+Environment=JAM_MAX_UPCOMING_QUEUE=25
+Environment=JAM_ALLOWED_ORIGINS=https://audioly.me,https://www.audioly.me
+MemoryMax=300M
+CPUQuota=80%
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+RestrictSUIDSGID=true
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+[Install]
+WantedBy=multi-user.target

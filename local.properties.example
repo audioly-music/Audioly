@@ -1,0 +1,7 @@
+# Copy to local.properties; keep real values private.
+# sdk.dir=/absolute/path/to/Android/Sdk
+LISTEN_TOGETHER_SERVER=https://api.audioly.me
+# Optional integrations:
+# LASTFM_API_KEY=
+# LASTFM_SECRET=
+# DISCORD_APPLICATION_ID=
