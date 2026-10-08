@@ -18,4 +18,4 @@ if [[ ! -x "$sdkmanager_path" ]]; then
 fi
 
 "$sdkmanager_path" --sdk_root="$sdk_root" \
-  "platform-tools" "platforms;android-37" "build-tools;36.0.0" "cmake;3.22.1"
+  "platform-tools" "platforms;android-37.0" "build-tools;36.0.0" "cmake;3.22.1"
