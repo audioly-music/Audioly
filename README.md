@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/images/banner.svg" alt="Audioly — Your music. Your space." width="100%" /></p>
+<p align="center"><img src="docs/images/banner.png" alt="Audioly — Your music. Your space." width="100%" /></p>
 
 <p align="center">
   <strong>A personal music app for Android, built around the way you listen.</strong><br />
@@ -23,8 +23,8 @@
 A full-screen player that follows the artwork. Playlists that feel at home. Lyrics, a flexible queue, and a library that travels with you.
 
 <p align="center">
-  <img src="docs/images/player.png" width="31%" alt="Audioly full-screen player with an English pop track" />
-  <img src="docs/images/playlist.png" width="31%" alt="An English pop playlist in Audioly" />
+  <img src="docs/images/player.png" width="31%" alt="Sunflower by Post Malone and Swae Lee in the Audioly player" />
+  <img src="docs/images/queue.png" width="31%" alt="Audioly queue with Sunflower and related English pop songs" />
   <img src="docs/images/search.png" width="31%" alt="Music search in Audioly" />
 </p>
 

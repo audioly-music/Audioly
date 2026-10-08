@@ -1,8 +1,8 @@
 # Publish Audioly on GitHub
 
-This folder is a clean source snapshot. No remote or GitHub repository has been created.
+This folder contains the prepared Audioly source. Its local Git configuration already points to `https://github.com/audioly-music/Audioly`. No code was pushed during this preparation.
 
-1. Create an empty GitHub repository named `Audioly` under your account. Do not generate a README or license there.
+1. Confirm that you own the configured repository and that it exists on GitHub. If creating it, do not generate another README or license there.
 2. Review the staged files and `NOTICE.md`. Keep `local.properties`, `.env` files and signing material out of Git.
 3. Commit and push from this folder:
 
@@ -10,11 +10,11 @@ This folder is a clean source snapshot. No remote or GitHub repository has been 
 git add .
 git diff --cached --stat
 git commit -m "Prepare Audioly public source"
-git remote add origin https://github.com/YOUR_USERNAME/Audioly.git
+git remote -v
 git push -u origin main
 ```
 
-GitHub Desktop can publish the local repository instead. Select **Public** only when you are ready to share all included source.
+If publishing to a different repository, update `origin` with `git remote set-url origin YOUR_REPOSITORY_URL` before pushing. GitHub Desktop can publish the local repository instead. Select **Public** only when you are ready to share all included source.
 
 ## Release checklist
 
@@ -28,6 +28,12 @@ GitHub Desktop can publish the local repository instead. Select **Public** only 
 
 ## Branding compatibility
 
-Visible branding, generated artifacts and new internal identifiers use Audioly. `NOTICE.md` preserves original attribution. `LegacyStorageMigration.kt` retains old identifiers only to recognize existing local data and previous server settings; deleting those strings would break compatibility. Original source notices remain intact.
+Visible branding, generated artifacts and new internal identifiers use Audioly. `NOTICE.md` preserves original attribution. `LegacyStorageMigration.kt` and Android backup exclusions retain old identifiers only to recognize existing local data and previous server settings; deleting those strings would break compatibility. Original source notices remain intact.
 
-Screenshots show real app UI with English pop content. They are documentation assets, not bundled music or endorsements. Review them before publishing; device status bars are present in the raw captures.
+Screenshots show real app UI with Sunflower (Spider-Man: Into the Spider-Verse), its search results and related English pop tracks. They are documentation assets, not bundled music or endorsements. Review them before publishing; device status bars are present in the raw captures.
+
+## Source preparation checks
+
+The Android development build and 880 unit tests passed during preparation. The Android build also compiles the renamed native libraries. Backend Go tests were not run locally.
+
+Private-key and token-pattern checks found no personal credentials in the publishable files. The pre-existing Google web-client API key in `PoTokenWebView.kt` is a client constant used by the BotGuard integration, not a personal deployment secret. Signing files, local configuration, generated builds and environment files are excluded. Review any future additions before publishing.
