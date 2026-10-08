@@ -1,6 +1,7 @@
 package com.music.audioly.data.listentogether
 
 import android.content.Context
+import android.os.SystemClock
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.Network
@@ -246,7 +247,7 @@ object ListenTogether {
     }
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private val clock = ServerClock()
+    private val clock = ServerClock(SystemClock::elapsedRealtime)
     private val switchMutex = Mutex()
 
     private val _state = MutableStateFlow(State())
@@ -479,9 +480,7 @@ object ListenTogether {
         probeDefault: suspend () -> ProbeResult,
     ): Pair<String, ServerConnectionState> {
         val normCustom = when (val res = parseAndNormalizeServerUrl(customServer)) {
-            is ServerUrlValidationResult.Valid -> res.normalizedUrl.takeUnless {
-                it in LEGACY_PARTY_SERVERS
-            }.orEmpty()
+            is ServerUrlValidationResult.Valid -> res.normalizedUrl
             is ServerUrlValidationResult.Invalid -> ""
         }
         val hasCustom = normCustom.isNotBlank() && normCustom != defaultServer
@@ -562,7 +561,7 @@ object ListenTogether {
     suspend fun probeHealthWithLatency(serverUrl: String, timeoutMs: Long): ProbeResult {
         val raw = resolveHttpBase(serverUrl)
         if (raw.isBlank()) return ProbeResult(isOnline = false, latencyMs = 0L)
-        val start = ServerClock.localNowMs()
+        val start = clock.nowMs()
         val isOnline = runCatching {
             val response = http.get("$raw/healthz") {
                 timeout { requestTimeoutMillis = timeoutMs }
@@ -574,7 +573,7 @@ object ListenTogether {
             Log.w(TAG, "health check failed for ${redact(raw)}: ${redact(it.message)}")
             false
         }
-        val elapsed = ServerClock.localNowMs() - start
+        val elapsed = clock.nowMs() - start
         return ProbeResult(isOnline = isOnline, latencyMs = if (isOnline) elapsed.coerceAtLeast(0L) else 0L)
     }
 
@@ -624,9 +623,6 @@ object ListenTogether {
         val normalizedSaved = when (val res = parseAndNormalizeServerUrl(rawSaved)) {
             is ServerUrlValidationResult.Valid -> res.normalizedUrl
             is ServerUrlValidationResult.Invalid -> ""
-        }
-        if (rawSaved.isNotBlank() && normalizedSaved.isBlank()) {
-            prefs.edit().remove(KEY_SERVER).apply()
         }
         _customServer.value = normalizedSaved
         _effectiveIdleServer.value = if (normalizedSaved.isNotBlank()) {
@@ -1126,12 +1122,12 @@ object ListenTogether {
      */
     fun partyPositionMs(): Long? {
         val playback = _state.value.playback
-        playback.track ?: return null
+        val track = playback.track ?: return null
         if (!playback.isPlaying) return playback.positionMs
         val serverNow = clock.serverNowMs() ?: return playback.effectivePositionMs
         val elapsed = (serverNow - playback.anchorMs).coerceAtLeast(0)
         val position = playback.positionMs + elapsed
-        val duration = playback.track.durationMs
+        val duration = track.durationMs
         return if (duration != null) minOf(position, duration) else position
     }
 
@@ -1227,7 +1223,7 @@ object ListenTogether {
     }
 
     private suspend fun DefaultClientWebSocketSession.ping() {
-        val sentAt = ServerClock.localNowMs()
+        val sentAt = clock.nowMs()
         val frame = buildJsonObject {
             put("type", "ping")
             put("clientMs", sentAt)
@@ -1257,7 +1253,7 @@ object ListenTogether {
     }
 
     private fun onFrame(text: String) {
-        val received = ServerClock.localNowMs()
+        val received = clock.nowMs()
         val frame = runCatching { json.parseToJsonElement(text).jsonObject }.getOrNull() ?: return
         when (frame["type"]?.jsonPrimitive?.content) {
             "welcome" -> {
@@ -1643,9 +1639,6 @@ object ListenTogether {
     const val CODE_LENGTH = 6
 
     private const val TAG = "ListenTogether"
-    // Migration-only values; never used as an advertised URL or fallback.
-    private val LEGACY_PARTY_SERVERS = com.music.audioly.data.LegacyStorageMigration.partyServers
-
     private const val PREFS = "audioly_listen_together"
     private const val KEY_SERVER = "server_url"
 

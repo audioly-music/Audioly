@@ -110,9 +110,9 @@ private val PreviewSong = Song(
 
 private val PreviewTabs = listOf(
     BottomTab("Play", AudiolyIcons.Play),
-    BottomTab("Explore", AudiolyIcons.Explore),
-    BottomTab("Library", AudiolyIcons.Library),
-    BottomTab("Search", AudiolyIcons.Search),
+    BottomTab("Explore", AudiolyIcons.TabExplore),
+    BottomTab("Library", AudiolyIcons.TabLibrary),
+    BottomTab("Search", AudiolyIcons.TabSearch),
 )
 
 /**

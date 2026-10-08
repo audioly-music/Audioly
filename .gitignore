@@ -55,3 +55,18 @@ AGENTS.md
 *.zip
 node_modules/
 deployment/website/public/downloads/
+
+# Desktop packages and tool output
+dist/
+*.msi
+*.exe
+*.dmg
+*.pkg
+*.deb
+*.rpm
+*.AppImage
+
+# JVM diagnostic files
+hs_err_pid*.log
+replay_pid*.log
+*.hprof

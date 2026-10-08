@@ -233,7 +233,6 @@ object Mp4Tagger {
     }
 
     /** The reverse-DNS owner of [freeformItem], which is what keeps the name ours. */
-    // Legacy on-disk metadata identifier; preserve compatibility with existing downloads.
     private const val MEAN = "com.music.audioly"
 
 

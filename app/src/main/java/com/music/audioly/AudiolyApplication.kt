@@ -11,6 +11,11 @@ import coil3.disk.directory
 import coil3.memory.MemoryCache
 import coil3.request.crossfade
 import com.music.audioly.auth.AuthStore
+import com.music.audioly.data.DebugLog
+import com.music.audioly.data.lyrics.LyricsTranslation
+import androidx.appcompat.app.AppCompatDelegate
+import com.music.audioly.ui.player.AndroidPlayerHost
+import com.music.audioly.ui.player.PlayerPlatform
 import com.music.audioly.data.canvas.CanvasCache
 import com.music.audioly.data.smb.SmbCoverFetcher
 import com.music.audioly.data.webdav.WebDavCoilAuth
@@ -19,7 +24,7 @@ import com.music.audioly.playback.AudioCache
 import com.music.audioly.playback.LastPlayed
 import com.music.audioly.playback.OriginalVersion
 import com.music.audioly.data.innertube.Innertube
-import com.music.audioly.data.innertube.InnerTubeXResolver
+import com.music.audioly.data.innertube.AndroidStreamHooks
 import com.music.audioly.data.listentogether.ListenTogether
 import com.music.audioly.data.scrobbling.LastFM
 import com.music.audioly.data.settings.AppSettings
@@ -39,6 +44,26 @@ class AudiolyApplication : Application(), SingletonImageLoader.Factory {
     override fun onCreate() {
         super.onCreate()
         com.music.audioly.data.LegacyStorageMigration.run(this)
+        // The player is drawn by the shared UI module; this is what it reads
+        // underneath — settings, the Canvas decoder, outputs, the party.
+        AndroidStreamHooks.installEarly()
+        PlayerPlatform.install(AndroidPlayerHost(this))
+        com.music.audioly.ui.AppUi.install(com.music.audioly.ui.AndroidAppUiHost)
+        // The shared data layer (lyrics, the YouTube Music client) logs to
+        // logcat on debug builds only, as the app's own DebugLog always has.
+        if (BuildConfig.DEBUG) {
+            DebugLog.sink = DebugLog.Sink { level, tag, message, error ->
+                when (level) {
+                    'D' -> android.util.Log.d(tag, message, error)
+                    'I' -> android.util.Log.i(tag, message, error)
+                    'W' -> android.util.Log.w(tag, message, error)
+                    else -> android.util.Log.e(tag, message, error)
+                }
+            }
+        }
+        // The per-app language picker, which YouTube Music's `hl` follows.
+        Innertube.appLanguage = { AppCompatDelegate.getApplicationLocales().get(0)?.language }
+        LyricsTranslation.cacheDir = cacheDir
         // PlaybackService shares this process, so seeding the cookie here means
         // stream resolution is authenticated from the first play onwards.
         authStore = AuthStore(this)
@@ -51,7 +76,7 @@ class AudiolyApplication : Application(), SingletonImageLoader.Factory {
         // nothing that runs after startup can see any of them half open.
         val backgroundInit = thread(name = "startup-init") {
             SourceRegistry.init(this)
-            InnerTubeXResolver.init(this)
+            AndroidStreamHooks.initInnerTubeX(this)
             // Its own directory: canvas clips are looping video, not audio, and
             // belong in a cache AudioCache's own limit and eviction policy were
             // never sized for. See CanvasCache's doc for why this one exists at
@@ -81,7 +106,9 @@ class AudiolyApplication : Application(), SingletonImageLoader.Factory {
             CoroutineScope(Dispatchers.IO).launch { Innertube.ensureSessionScope() }
         }
         AppSettings.init(this, authStore)
-        com.music.audioly.data.spotify.SpotifyIntegration.init(this)
+        // Before anything resolves a track: an addon with `checkValidLossless`
+        // is gated on this, and the gate reads "no" until it has looked.
+        com.music.audioly.playback.audio.LosslessOutput.init(this)
         // Restores a party this device is still a member of, so a process death
         // mid-session is something the rest of the party never sees. The socket
         // and the clock offset are not restored — both are re-established on
@@ -125,6 +152,8 @@ class AudiolyApplication : Application(), SingletonImageLoader.Factory {
         }
         // Initialize LastFM with saved settings if available
         initLastfm()
+        // The public "apps open right now" count; see Presence.
+        com.music.audioly.data.presence.AndroidPresence.install(this)
         backgroundInit.join()
     }
 

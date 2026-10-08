@@ -68,7 +68,7 @@ object JamInviteLink {
         }
 
         // 2. Official web domain: https://audioly.me/invite/<CODE>
-        if (scheme == "https" && (host == HOST || host == "www.$HOST")) {
+        if (scheme == "https" && host == HOST) {
             val match = INVITE_PATH.matchEntire(uri.path.orEmpty()) ?: return null
             val code = match.groupValues[1].uppercase()
             return ParsedJamInvite(code = code, serverUrl = server)
@@ -80,7 +80,7 @@ object JamInviteLink {
     fun url(code: String, customServer: String? = null): String {
         val base = customServer?.trim()?.trimEnd('/')
         return if (!base.isNullOrBlank() && !base.equals(ORIGIN, ignoreCase = true)) {
-            "$ORIGIN/invite/${code.uppercase()}?server=${URLEncoder.encode(base, "UTF-8")}"
+            "$base/invite/${code.uppercase()}"
         } else {
             "$ORIGIN/invite/${code.uppercase()}"
         }

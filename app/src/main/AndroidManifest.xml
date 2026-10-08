@@ -206,7 +206,6 @@
                     android:scheme="https"
                     android:host="audioly.me"
                     android:pathPattern="/invite/......" />
-                <data android:scheme="https" android:host="www.audioly.me" android:pathPattern="/invite/......" />
             </intent-filter>
 
             <!-- Custom scheme for Listen Together invites on custom server deployments. -->
@@ -336,6 +335,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <!-- Where the Cast framework asks how this app wants to cast. -->
+        <meta-data
+            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+            android:value="com.music.audioly.playback.cast.CastOptionsProvider" />
     </application>
 
 </manifest>

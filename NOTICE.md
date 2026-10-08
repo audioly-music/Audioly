@@ -4,8 +4,6 @@ Audioly is a modified distribution of BitChord by Kushagra Singh (@kushagrasingh
 
 The application retains the GNU General Public License version 3 in LICENSE. Original contributor and copyright notices in reused source files remain applicable. Audioly's name, domain, presentation and modifications do not imply endorsement by the original authors.
 
-Spotify transport code is adapted from Meld by FrancescoGrazioso, commit 766dce4937f2b314c2e580444601fd4e9dd42684, under GPL-3.0: https://github.com/FrancescoGrazioso/Meld. Per-file notices are retained.
-
 ## Original contributor record
 
 # Maintainers
@@ -46,3 +44,5 @@ This list is automatically generated from GitHub repository contributor data.
 - [@SHUBH-snippet](https://github.com/SHUBH-snippet)
 - [@yxyydev](https://github.com/yxyydev)
 <!-- END CONTRIBUTORS -->
+
+Android Spotify library/import and desktop/shared modules are adapted from the upstream BitChord repository at commit 2c599a6cd7a195227a11dab5769f88da8fd08194, under GPL-3.0. Original per-file copyright and license notices remain applicable.

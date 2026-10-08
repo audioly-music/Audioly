@@ -2,7 +2,6 @@ package com.music.audioly.data.discord
 
 import android.content.Context
 import com.music.audioly.R
-import com.music.audioly.BuildConfig
 import com.music.audioly.data.model.Song
 import com.music.audioly.data.model.artworkAt
 import com.my.kizzy.rpc.KizzyRPC
@@ -122,7 +121,7 @@ class DiscordRPC(
             // that icon isn't ours to set. A track with no artwork — or with
             // artwork Discord can't reach, which is anything that isn't an http
             // URL — gets our own launcher icon instead.
-            largeImage = if (APPLICATION_ID == null) null else RpcImage.ExternalImage(
+            largeImage = RpcImage.ExternalImage(
                 song.artworkAt(ART_PX)?.takeIf { it.startsWith("http") } ?: FALLBACK_ART_URL,
             ),
             smallImage = null,
@@ -131,7 +130,7 @@ class DiscordRPC(
             // measured premium format.
             largeText = audioQuality,
             smallText = null,
-            buttons = if (APPLICATION_ID != null && buttonsList.isNotEmpty()) buttonsList else null,
+            buttons = if (buttonsList.isNotEmpty()) buttonsList else null,
             type = type,
             statusDisplayType = if (useDetails) StatusDisplayType.DETAILS else StatusDisplayType.STATE,
             since = currentTime,
@@ -166,9 +165,9 @@ class DiscordRPC(
          * paste its id here to have the artwork proxied and the buttons
          * attributed under your own app rather than the upstream project's.
          */
-        private val APPLICATION_ID = BuildConfig.DISCORD_APPLICATION_ID.takeIf { it.isNotBlank() }
+        private const val APPLICATION_ID = "1411019391843172514"
 
-        const val PROJECT_URL = "https://audioly.me"
+        const val PROJECT_URL = "https://github.com/audioly-music/Audioly"
 
         const val DEFAULT_BUTTON_1 = "Listen on YouTube Music"
         const val DEFAULT_BUTTON_2 = "Visit Audioly"
@@ -184,7 +183,7 @@ class DiscordRPC(
          * APK — a `res/` drawable has no address the presence can carry.
          */
         private const val FALLBACK_ART_URL =
-            "https://audioly.me/assets/audioly-logo.png"
+            "https://raw.githubusercontent.com/audioly-music/Audioly/main/app/src/main/ic_launcher-playstore.png"
 
         fun watchUrl(song: Song): String =
             "https://music.youtube.com/watch?v=${song.videoId}"

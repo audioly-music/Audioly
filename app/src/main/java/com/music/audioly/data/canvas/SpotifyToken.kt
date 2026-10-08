@@ -52,7 +52,6 @@ internal object SpotifyToken {
     @Volatile private var appContext: Context? = null
 
     @Volatile private var cachedAccessToken: String? = null
-    @Volatile private var cachedCookie: String? = null
     @Volatile private var accessTokenExpiresAtMs = 0L
     @Volatile private var cachedClientId: String? = null
 
@@ -65,6 +64,14 @@ internal object SpotifyToken {
 
     fun init(context: Context) {
         appContext = context.applicationContext
+    }
+
+    fun invalidate() {
+        cachedAccessToken = null
+        accessTokenExpiresAtMs = 0L
+        cachedClientId = null
+        cachedClientToken = null
+        clientTokenExpiresAtMs = 0L
     }
 
     /**
@@ -83,16 +90,9 @@ internal object SpotifyToken {
         if (cookie.isBlank()) return null
 
         val now = System.currentTimeMillis()
-        cachedAccessToken?.let { if (cookie == cachedCookie && now < accessTokenExpiresAtMs - 30_000) return it }
+        cachedAccessToken?.let { if (now < accessTokenExpiresAtMs - 30_000) return it }
 
         return harvestMutex.withLock {
-            if (cookie != AppSettings.spotifySpdcToken.value) return@withLock null
-            if (cachedCookie != cookie) {
-                cachedAccessToken = null
-                cachedClientToken = null
-                cachedClientId = null
-                cachedSession = null
-            }
             val stillNow = System.currentTimeMillis()
             cachedAccessToken?.let { if (stillNow < accessTokenExpiresAtMs - 30_000) return@withLock it }
 
@@ -103,25 +103,17 @@ internal object SpotifyToken {
             }
 
             val harvested = withContext(Dispatchers.Main) { harvestViaWebView(context, cookie) }
-            if (cookie != AppSettings.spotifySpdcToken.value) return@withLock null
             if (harvested == null) {
                 Log.w(TAG, "token harvest failed or timed out")
                 return@withLock null
             }
 
             cachedAccessToken = harvested.token
-            cachedCookie = cookie
             accessTokenExpiresAtMs = harvested.expiresAt
             harvested.clientId?.let { cachedClientId = it }
             Log.d(TAG, "harvested access token, good until ${java.util.Date(harvested.expiresAt)}")
             harvested.token
         }
-    }
-
-    /** Browser account preview: does not change AppSettings or the active token cache. */
-    suspend fun previewAccessToken(cookie: String): String? = harvestMutex.withLock {
-        val context = appContext ?: return@withLock null
-        withContext(Dispatchers.Main) { harvestViaWebView(context, cookie)?.token }
     }
 
     /**
@@ -152,7 +144,7 @@ internal object SpotifyToken {
         // /api/token request if a live one is already sitting there, leaving
         // the hook with nothing to see — wipe storage so every harvest forces
         // a real mint.
-        runCatching { WebStorage.getInstance().deleteOrigin("https://open.spotify.com") }
+        runCatching { WebStorage.getInstance().deleteAllData() }
 
         var webView: WebView? = null
         return try {

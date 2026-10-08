@@ -43,7 +43,7 @@ object AppUpdateChecker {
     private const val CACHE_SUBDIR = "updates"
 
     private const val LATEST_RELEASE_URL =
-        "" // Personal Audioly builds have no release feed yet.
+        "https://api.github.com/repos/audioly-music/Audioly/releases/latest"
 
     private val json = Json { ignoreUnknownKeys = true }
 
@@ -66,7 +66,6 @@ object AppUpdateChecker {
     private var downloadCancelled = false
 
     suspend fun check() = withContext(Dispatchers.IO) {
-        if (LATEST_RELEASE_URL.isBlank()) return@withContext
         runCatching {
             val request = Request.Builder().url(LATEST_RELEASE_URL).build()
             val body = Http.client.newCall(request).execute().use { response ->

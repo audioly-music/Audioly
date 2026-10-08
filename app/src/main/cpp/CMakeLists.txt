@@ -11,7 +11,7 @@
 # to that same tree without duplicating this module.
 
 cmake_minimum_required(VERSION 3.22.1)
-project(audioly_analysis LANGUAGES CXX)
+project(audioly_analysis LANGUAGES C CXX)
 
 get_filename_component(AUDIOLY_NATIVE_DIR
     "${CMAKE_CURRENT_SOURCE_DIR}/../../../../native"
@@ -47,3 +47,15 @@ target_link_libraries(audioly_analysis ${log-lib})
 # LOAD segments to 16KB. A superset of 4KB alignment, so 4KB devices are
 # unaffected. APK-side alignment of uncompressed .so files is handled by AGP.
 target_link_options(audioly_analysis PRIVATE "-Wl,-z,max-page-size=16384")
+
+# DSD playback (DSF/DFF). The decimator turns 1-bit DSD into float PCM for
+# DsdExtractor; DST is the lossless compression SACD rips use inside DFF.
+# DST is LGPL (see dsd/dst/NOTICE.md), so it is a library of its own that can
+# be rebuilt or swapped without touching the rest.
+add_library(audioly_dsd SHARED dsd/dsd_decimator.cpp)
+target_compile_options(audioly_dsd PRIVATE -O3 -fno-fast-math -ffp-contract=off -fvisibility=hidden)
+target_link_options(audioly_dsd PRIVATE "-Wl,-z,max-page-size=16384")
+
+add_library(audioly_dst SHARED dsd/dst/decoder.c dsd/dst/jni.cpp)
+target_compile_options(audioly_dst PRIVATE -O3 -fno-strict-aliasing -fvisibility=hidden)
+target_link_options(audioly_dst PRIVATE "-Wl,-z,max-page-size=16384")

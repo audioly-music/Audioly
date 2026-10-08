@@ -20,15 +20,6 @@ import org.junit.Test
 class JamInviteLinkTest {
 
     @Test
-    fun customServerSharesRoundTripThroughAudioly() {
-        val url = JamInviteLink.url("abc123", "https://custom.example.com/music/")
-        assertEquals("ABC123", JamInviteLink.parseInvite(url)?.code)
-        assertEquals("https://custom.example.com/music", JamInviteLink.parseInvite(url)?.serverUrl)
-        assertEquals("ABC123", JamInviteLink.parse("https://www.audioly.me/invite/ABC123"))
-        assertNull(JamInviteLink.parse("https://audioly.me.evil.example/invite/ABC123"))
-    }
-
-    @Test
     fun `parses and normalizes a public invite`() {
         assertEquals(
             "A1B2C3",
@@ -66,11 +57,11 @@ class JamInviteLinkTest {
     @Test
     fun `builds the custom server share URL`() {
         assertEquals(
-            "https://audioly.me/invite/ABC123?server=https%3A%2F%2Fmy-party.onrender.com",
+            "https://my-party.onrender.com/invite/ABC123",
             JamInviteLink.url("abc123", "https://my-party.onrender.com"),
         )
         assertEquals(
-            "https://audioly.me/invite/ABC123?server=https%3A%2F%2Fmy-party.onrender.com",
+            "https://my-party.onrender.com/invite/ABC123",
             JamInviteLink.url("abc123", "https://my-party.onrender.com/"),
         )
         assertEquals(
@@ -156,7 +147,7 @@ class JamInviteLinkTest {
         } else {
             JamInviteLink.url(code, customHost)
         }
-        assertEquals("https://audioly.me/invite/JAM002?server=https%3A%2F%2Fcustom.jam.example.com", link)
+        assertEquals("https://custom.jam.example.com/invite/JAM002", link)
         assertNotEquals("https://audioly.me/invite/JAM002", link)
     }
 

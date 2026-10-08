@@ -1,7 +1,7 @@
 <p align="center"><img src="docs/images/banner.png" alt="Audioly — Your music. Your space." width="100%" /></p>
 
 <p align="center">
-  <strong>A personal music app for Android, built around the way you listen.</strong><br />
+  <strong>A personal music app for Android and desktop, built around the way you listen.</strong><br />
   Discover music, bring your playlists, save favourites, and listen together.
 </p>
 
@@ -34,16 +34,16 @@ A full-screen player that follows the artwork. Playlists that feel at home. Lyri
 
 | Your listening | What you get |
 | --- | --- |
-| Discover | YouTube Music browsing and search, with optional Spotify-powered Home and search. |
+| Discover | YouTube Music browsing and search. |
 | Bring your library | Spotify playlists and liked songs, public playlist imports, local audio, and saved favourites. |
-| Make it yours | Artwork-led player colours, lyrics, equalizer, queue controls, and manual playback-match correction. |
+| Make it yours | Artwork-led player colours, lyrics, equalizer, and queue controls. |
 | Take it offline | Downloads with progress and retry controls, subject to source availability and your network settings. |
 | Listen together | Shared parties with a room code or an `audioly.me` invitation link. Requires a running party server. |
 | Keep listening | Background playback, media controls, Android Auto integration, and listening history. |
 
 ### How Spotify playback works
 
-Spotify supplies catalog and playlist information. Audioly matches those tracks to a playable YouTube source; it does **not** stream Spotify's protected audio. Matches are cached, and a wrong match can be corrected manually. An uncached track still needs a network lookup. Private library features require connecting your Spotify account; upstream changes and rate limits can affect availability.
+Spotify supplies catalog and playlist information. Audioly matches those tracks to a playable YouTube source; it does **not** stream Spotify's protected audio. Track matching requires a YouTube Music lookup before playback. Private library features require connecting your Spotify account; upstream changes and rate limits can affect availability.
 
 See [Spotify integration notes](docs/SPOTIFY_INTEGRATION.md) for implementation details and current limitations. Audioly is an independent project and is not affiliated with Spotify, Apple, Google, or YouTube.
 
@@ -53,7 +53,7 @@ Visit [audioly.me](https://audioly.me) for the project website. This source snap
 
 ## Build it yourself
 
-Requirements: **JDK 17**, Android SDK **37** (target SDK 36), and the CMake/NDK components requested by Gradle. Minimum supported Android version: **8.0 / API 26**.
+Requirements: **JDK 21** (Android bytecode targets Java 17), Android SDK **37** (target SDK 36), and the CMake/NDK components requested by Gradle. Minimum supported Android version: **8.0 / API 26**.
 
 1. Open the repository in Android Studio and let Gradle sync.
 2. Set your SDK path in `local.properties` if Android Studio has not created it. Optional configuration is shown in `local.properties.example`.
@@ -76,6 +76,9 @@ For a production build, run `./gradlew :app:assembleProdRelease`. Configure your
 
 ```text
 app/          Android application, Compose UI and playback
+desktopApp/   Windows, Linux and macOS desktop application
+shared/       Shared models, networking and playback logic
+sharedUi/     Shared Compose player and UI components
 native/       Audio analysis and DSP code
 backend/      Go Listen Together server
 deployment/  Server and website configuration examples
@@ -83,6 +86,10 @@ docs/        Integration notes, publishing guide and screenshots
 ```
 
 The party backend and website are optional for local development. See [backend documentation](backend/README.md) and [deployment instructions](deployment/README.md). Deployment requires your own infrastructure and credentials; CI never deploys automatically.
+
+## Desktop
+
+Audioly includes a Compose desktop application for Windows, Linux and macOS. Building requires **JDK 21**; packaged applications include their own runtime. See [DESKTOP.md](DESKTOP.md) for build commands. Desktop Spotify currently supports Canvas setup; the connected playlist browser is Android-only.
 
 ## Contributing
 
