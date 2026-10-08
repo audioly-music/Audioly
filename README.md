@@ -88,6 +88,6 @@ The party backend and website are optional for local development. See [backend d
 
 Bug reports should include the app version, Android version, steps to reproduce, and relevant redacted logs. Avoid posting cookies, tokens, private playlists, or signing files. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## License and acknowledgements
+## License
 
-Distributed under [GPL-3.0](LICENSE). Original project attribution and reused-code notices are preserved in [NOTICE.md](NOTICE.md). Audioly branding and changes do not imply endorsement by the original authors.
+Distributed under [GPL-3.0](LICENSE). See [license notices](NOTICE.md).
