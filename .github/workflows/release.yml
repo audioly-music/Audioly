@@ -23,19 +23,28 @@ jobs:
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           python3 - <<'PY'
-          import os, base64
+          import os, base64, subprocess
           from pathlib import Path
           names = ('KEYSTORE_BASE64', 'STORE_PASSWORD', 'KEY_ALIAS', 'KEY_PASSWORD')
-          missing = [name for name in names if not os.environ.get(name)]
+          values_from_secrets = {name: os.environ.get(name, '').rstrip('\r\n') for name in names}
+          missing = [name for name in names if not values_from_secrets[name]]
           if missing:
               raise SystemExit('Configure all four Android signing secrets before building a release.')
           store = Path(os.environ['RUNNER_TEMP']) / 'audioly-release.jks'
-          store.write_bytes(base64.b64decode(os.environ['KEYSTORE_BASE64'], validate=True))
+          store.write_bytes(base64.b64decode(''.join(values_from_secrets['KEYSTORE_BASE64'].split()), validate=True))
           store.chmod(0o600)
+          check_env = os.environ.copy()
+          check_env['AUDIOLY_STORE_PASSWORD'] = values_from_secrets['STORE_PASSWORD']
+          result = subprocess.run(['keytool', '-list', '-keystore', str(store),
+                                   '-storepass:env', 'AUDIOLY_STORE_PASSWORD',
+                                   '-alias', values_from_secrets['KEY_ALIAS']],
+                                  env=check_env, capture_output=True)
+          if result.returncode:
+              raise SystemExit('Signing key validation failed. Check ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD and ANDROID_KEY_ALIAS against the private-signing files.')
           def escape(value):
               return value.replace('\\', '\\\\').replace('\n', '\\n').replace('\r', '\\r').replace('\t', '\\t').replace(' ', '\\ ')
-          values = {'storeFile': str(store), 'storePassword': os.environ['STORE_PASSWORD'],
-                    'keyAlias': os.environ['KEY_ALIAS'], 'keyPassword': os.environ['KEY_PASSWORD']}
+          values = {'storeFile': str(store), 'storePassword': values_from_secrets['STORE_PASSWORD'],
+                    'keyAlias': values_from_secrets['KEY_ALIAS'], 'keyPassword': values_from_secrets['KEY_PASSWORD']}
           props = Path('keystore.properties')
           props.write_text(''.join(key + '=' + escape(value) + '\n' for key, value in values.items()), encoding='utf-8')
           props.chmod(0o600)
