@@ -15,7 +15,3 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
       - run: chmod +x gradlew
       - run: ./gradlew :app:testDevDebugUnitTest :app:assembleDevDebug --max-workers=2
-      - uses: actions/upload-artifact@v4
-        with:
-          name: audioly-dev-debug
-          path: app/build/outputs/apk/dev/debug/*.apk

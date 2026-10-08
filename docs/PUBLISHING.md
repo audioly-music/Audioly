@@ -37,3 +37,16 @@ Screenshots show real app UI with Sunflower (Spider-Man: Into the Spider-Verse),
 The Android development build and 880 unit tests passed during preparation. The Android build also compiles the renamed native libraries. Backend Go tests were not run locally.
 
 Private-key and token-pattern checks found no personal credentials in the publishable files. The pre-existing Google web-client API key in `PoTokenWebView.kt` is a client constant used by the BotGuard integration, not a personal deployment secret. Signing files, local configuration, generated builds and environment files are excluded. Review any future additions before publishing.
+
+## GitHub APK downloads
+
+Use **Actions → Build Audioly release → Run workflow** to build the public APK. Configure these repository **Actions secrets** first:
+
+- `ANDROID_KEYSTORE_BASE64`: the base64-encoded contents of your own release keystore.
+- `ANDROID_KEYSTORE_PASSWORD`: its store password.
+- `ANDROID_KEY_ALIAS`: the signing key alias.
+- `ANDROID_KEY_PASSWORD`: the signing key password.
+
+Keep the same keystore for every update. The workflow fails if secrets are missing; it never substitutes a debug key or uploads an unsigned APK. It builds `prodRelease`, verifies the package is `com.music.audioly`, verifies the launcher label is **Audioly**, and verifies the APK signature. Download the `Audioly-release` artifact and attach `Audioly.apk` and its checksum to your GitHub Release. GitHub users should download that APK from **Releases**.
+
+The Android checks workflow runs development tests but does not upload development APKs. `Audioly Dev` remains a separate local developer variant. Existing GitHub artifacts or release assets, if any, are not changed by these source edits; remove any old development APKs before publishing a release.

@@ -1,0 +1,66 @@
+name: Build Audioly release
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Configure release signing
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          python3 - <<'PY'
+          import os, base64
+          from pathlib import Path
+          names = ('KEYSTORE_BASE64', 'STORE_PASSWORD', 'KEY_ALIAS', 'KEY_PASSWORD')
+          missing = [name for name in names if not os.environ.get(name)]
+          if missing:
+              raise SystemExit('Configure all four Android signing secrets before building a release.')
+          store = Path(os.environ['RUNNER_TEMP']) / 'audioly-release.jks'
+          store.write_bytes(base64.b64decode(os.environ['KEYSTORE_BASE64'], validate=True))
+          store.chmod(0o600)
+          def escape(value):
+              return value.replace('\\', '\\\\').replace('\n', '\\n').replace('\r', '\\r').replace('\t', '\\t').replace(' ', '\\ ')
+          values = {'storeFile': str(store), 'storePassword': os.environ['STORE_PASSWORD'],
+                    'keyAlias': os.environ['KEY_ALIAS'], 'keyPassword': os.environ['KEY_PASSWORD']}
+          props = Path('keystore.properties')
+          props.write_text(''.join(key + '=' + escape(value) + '\n' for key, value in values.items()), encoding='utf-8')
+          props.chmod(0o600)
+          PY
+      - name: Build production APK
+        run: |
+          chmod +x gradlew
+          ./gradlew :app:assembleProdRelease --max-workers=2
+      - name: Verify production identity and signature
+        run: |
+          apk=$(find app/build/outputs/apk/prod/release -name '*universal*.apk' -print -quit)
+          test -n "$apk"
+          tools=$(find "$ANDROID_HOME/build-tools" -name aapt2 | sort -V | tail -n 1)
+          badging=$("$tools" dump badging "$apk")
+          printf '%s\n' "$badging" | grep -q "^package: name='com.music.audioly'"
+          printf '%s\n' "$badging" | grep -q "^application-label:'Audioly'$"
+          "$(dirname "$tools")/apksigner" verify "$apk"
+          mkdir -p release
+          cp "$apk" release/Audioly.apk
+          cd release
+          sha256sum Audioly.apk > Audioly.apk.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Audioly-release
+          path: release/*
+          if-no-files-found: error
+      - name: Remove signing material
+        if: always()
+        run: rm -f keystore.properties "$RUNNER_TEMP/audioly-release.jks"

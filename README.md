@@ -49,7 +49,7 @@ See [Spotify integration notes](docs/SPOTIFY_INTEGRATION.md) for implementation 
 
 ## Get Audioly
 
-Visit [audioly.me](https://audioly.me) for the project website. This source snapshot does not bundle an APK. Maintainers should attach signed builds to GitHub Releases; see the [release checklist](docs/PUBLISHING.md). Never share signing keys or account tokens.
+Visit [audioly.me](https://audioly.me) for the project website. This source snapshot does not bundle an APK. Public downloads should use the signed production APK from GitHub Releases: it installs as **Audioly** (`com.music.audioly`). The [release workflow and checklist](docs/PUBLISHING.md#github-apk-downloads) describe how to build and publish it. Never share signing keys or account tokens.
 
 ## Build it yourself
 
