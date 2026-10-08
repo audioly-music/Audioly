@@ -118,6 +118,11 @@ Pass `-Paudioly.version=1.2.3` to stamp a version other than the one in
 
 ## Audioly GitHub builds
 
+Desktop icons and the home-page mark use the supplied transparent artwork in
+`desktopApp/branding/audioly-mark.png`. To regenerate the committed PNG, ICO and
+macOS ICNS assets, install Pillow and run `python desktopApp/packaging/generate-icons.py`.
+The home page displays the original colors, and the tray preserves transparency.
+
 Run **Actions → Build Audioly desktop → Run workflow** after publishing this source. Windows, Linux and macOS jobs build installers and portable packages as workflow artifacts. Attach the desired packages to a GitHub Release yourself; this workflow does not publish automatically. Desktop signing/notarization is not configured, so operating systems may display an unsigned-app warning.
 
 The Android release workflow remains separate and uses the existing Android signing secrets. Android production packages install as Audioly (`com.music.audioly`); desktop packages and launchers also use Audioly. Desktop Spotify currently supports Canvas setup, while Android additionally provides connected playlists and Liked Songs.

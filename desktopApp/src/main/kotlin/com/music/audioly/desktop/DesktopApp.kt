@@ -2321,7 +2321,7 @@ fun AudiolyDesktopApp() {
         if (!trayIconEnabled) return@LaunchedEffect
         // The logo travels to the tray as pixels: a themed icon name would be whatever the user's
         // theme draws for a generic music player.
-        runCatching { Res.readBytes("drawable/logo.svg") }.onSuccess(tray::setIcon)
+        runCatching { Res.readBytes("drawable/logo.png") }.onSuccess(tray::setIcon)
     }
     LaunchedEffect(tray) {
         DesktopTrayMenu.bind(
@@ -3719,6 +3719,15 @@ fun AudiolyDesktopApp() {
                             pullState = rememberPullToRefreshState(),
                             contentPadding = sharedPagePadding,
                             title = null,
+                            headerContent = {
+                                Image(
+                                    painter = painterResource(Res.drawable.logo_mark),
+                                    contentDescription = "Audioly",
+                                    modifier = Modifier
+                                        .padding(start = 24.dp, top = 16.dp, bottom = 24.dp)
+                                        .size(width = 82.dp, height = 72.dp),
+                                )
+                            },
                             signedIn = youtubeSignedIn,
                             onSignIn = { overlays.accounts = true },
                             onItemLongPress = { item -> if (item.videoId != null) openMenu(item.toSong()) },
@@ -4019,7 +4028,7 @@ private fun DesktopTopBar(
                 Image(
                     painter = painterResource(Res.drawable.logo_mark),
                     contentDescription = "Audioly",
-                    modifier = Modifier.size(width = 28.dp, height = 18.dp),
+                    modifier = Modifier.size(width = 28.dp, height = 25.dp),
                 )
                 Spacer(Modifier.width(14.dp))
                 DesktopToolbarButton(onClick = onBack, enabled = canGoBack, size = 32.dp) {

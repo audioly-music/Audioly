@@ -1,10 +1,7 @@
 package com.music.audioly.desktop
 
-import org.jetbrains.skia.Bitmap
-import org.jetbrains.skia.ImageInfo
-import org.jetbrains.skia.Data
-import org.jetbrains.skia.Surface
-import org.jetbrains.skia.svg.SVGDOM
+import java.awt.RenderingHints
+import java.awt.image.BufferedImage
 import org.freedesktop.dbus.DBusPath
 import org.freedesktop.dbus.Struct
 import org.freedesktop.dbus.annotations.DBusInterfaceName
@@ -69,14 +66,14 @@ internal class DesktopStatusNotifierController(
     private var iconPixmaps: List<TrayPixmap> = emptyList()
 
     /** Hands the tray the application's own artwork. */
-    fun setIcon(svg: ByteArray) {
+    fun setIcon(png: ByteArray) {
         if (!isLinuxSession()) {
             // AWT wants one image at the size the tray asks for, not a ladder of pixmaps for a
             // shell to choose from.
-            DesktopAwtTray.setIcon(renderSvg(svg, AWT_ICON_SIZE)?.toImage())
+            DesktopAwtTray.setIcon(renderTrayIcon(png, AWT_ICON_SIZE)?.toImage())
             return
         }
-        val rendered = ICON_SIZES.mapNotNull { size -> renderSvg(svg, size) }
+        val rendered = ICON_SIZES.mapNotNull { size -> renderTrayIcon(png, size) }
         if (rendered.isEmpty()) return
         synchronized(lock) { iconPixmaps = rendered }
         publishProperties()
@@ -284,30 +281,27 @@ private fun TrayPixmap.toImage(): java.awt.image.BufferedImage {
     return image
 }
 
-private fun renderSvg(svg: ByteArray, size: Int): TrayPixmap? = runCatching {
-    val dom = SVGDOM(Data.makeFromBytes(svg))
-    dom.setContainerSize(size.toFloat(), size.toFloat())
-    val surface = Surface.makeRasterN32Premul(size, size)
-    // The container size alone does not resize an SVG that declares absolute width and height.
-    val intrinsic = dom.root?.width?.value?.takeIf { it > 0f } ?: size.toFloat()
-    surface.canvas.scale(size / intrinsic, size / intrinsic)
-    dom.render(surface.canvas)
-    val bitmap = Bitmap()
-    bitmap.allocPixels(ImageInfo.makeN32Premul(size, size))
-    if (!surface.readPixels(bitmap, 0, 0)) return@runCatching null
-    val bytes = bitmap.readPixels() ?: return@runCatching null
-
+internal fun renderTrayIcon(png: ByteArray, size: Int): TrayPixmap? = runCatching {
+    val source = DesktopAwtTray.decode(png) ?: return@runCatching null
+    val image = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
+    val scale = minOf(size.toDouble() / source.width, size.toDouble() / source.height)
+    val width = (source.width * scale).toInt().coerceAtLeast(1)
+    val height = (source.height * scale).toInt().coerceAtLeast(1)
+    val graphics = image.createGraphics()
+    try {
+        graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC)
+        graphics.drawImage(source, (size - width) / 2, (size - height) / 2, width, height, null)
+    } finally {
+        graphics.dispose()
+    }
     val argb = ByteArray(size * size * 4)
     for (pixel in 0 until size * size) {
         val at = pixel * 4
-        val b = bytes[at]
-        val g = bytes[at + 1]
-        val r = bytes[at + 2]
-        val a = bytes[at + 3]
-        argb[at] = a
-        argb[at + 1] = r
-        argb[at + 2] = g
-        argb[at + 3] = b
+        val color = image.getRGB(pixel % size, pixel / size)
+        argb[at] = (color ushr 24).toByte()
+        argb[at + 1] = (color ushr 16).toByte()
+        argb[at + 2] = (color ushr 8).toByte()
+        argb[at + 3] = color.toByte()
     }
     TrayPixmap(size, size, argb)
 }.getOrNull()

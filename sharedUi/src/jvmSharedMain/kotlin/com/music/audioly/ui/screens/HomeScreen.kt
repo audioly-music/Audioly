@@ -138,6 +138,7 @@ fun HomeScreen(
     leadHero: Boolean = true,
     currentSong: Song? = null,
     isPlaying: Boolean = false,
+    headerContent: (@Composable () -> Unit)? = null,
 ) {
     val recentsViewType by AppUi.host.homeRecentsViewType.collectAsStateWithLifecycle()
 
@@ -161,6 +162,9 @@ fun HomeScreen(
                 contentPadding
             },
         ) {
+            if (headerContent != null) {
+                item { headerContent() }
+            }
             if (title != null) {
                 item { HomeTitle(title) }
             }

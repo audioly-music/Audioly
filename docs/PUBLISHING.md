@@ -36,7 +36,7 @@ Screenshots show real app UI with Sunflower (Spider-Man: Into the Spider-Verse),
 
 The Android suite passed 972 unit tests. The signed production APK builds with package `com.music.audioly`, launcher name **Audioly**, and version 1.10.0. The Android build also compiles the renamed native libraries. Backend Go tests were not run locally.
 
-Desktop passed 340 tests, the shared core passed 43 tests, and the shared UI passed 34 tests: 1,389 passing tests in total. Desktop compilation passed on Windows. Live Spotify account access still needs a device check; the automated tests do not verify a personal account session.
+Desktop passed 342 tests, the shared core passed 43 tests, and the shared UI passed 34 tests: 1,391 passing tests in total. Desktop compilation passed on Windows. Live Spotify account access still needs a device check; the automated tests do not verify a personal account session.
 
 The Windows app image and portable archive also build locally. Local packaging skips the Automix analyser and native Windows frame because this PC lacks MinGW/CMake/Ninja. The desktop workflow installs those tools and asserts that the native libraries are bundled. Linux and macOS packages require their workflow jobs; they were not built locally.
 
