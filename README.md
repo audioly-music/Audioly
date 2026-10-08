@@ -88,6 +88,12 @@ The party backend and website are optional for local development. See [backend d
 
 Bug reports should include the app version, Android version, steps to reproduce, and relevant redacted logs. Avoid posting cookies, tokens, private playlists, or signing files. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## Maintainer
+
+Audioly is developed and maintained by **Naishal Dave**.
+
+[Website](https://naishaldave.com) · [GitHub](https://github.com/davenaishal) · [LinkedIn](https://www.linkedin.com/in/naishaldave)
+
 ## License
 
 Distributed under [GPL-3.0](LICENSE). See [license notices](NOTICE.md).
