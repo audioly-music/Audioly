@@ -12,8 +12,7 @@ jobs:
           distribution: temurin
           java-version: '17'
       - name: Prepare Android SDK
-        run: |
-          sdkmanager --sdk_root="$ANDROID_HOME" "platform-tools" "platforms;android-37" "build-tools;36.0.0" "cmake;3.22.1"
+        run: bash scripts/ci/setup-android-sdk.sh
       - uses: gradle/actions/setup-gradle@v4
       - run: chmod +x gradlew
       - run: ./gradlew :app:testDevDebugUnitTest :app:assembleDevDebug --max-workers=2
