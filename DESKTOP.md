@@ -45,12 +45,12 @@ including any compatibility fixes made after the Android release tag.
 | macOS | `Audioly-<version>-macos-arm64.dmg` | For Apple Silicon Macs (M1/M2/M3/M4/later). Drag to Applications. |
 | macOS | `Audioly-<version>-macos-x64.dmg` | For Intel Macs. Drag to Applications. |
 | macOS | `Audioly-<version>-macos-*.pkg` | Standard macOS installer package for automated or managed installations. |
-| Linux | `Audioly-<version>-linux-x86_64.AppImage` | `chmod +x` it and run. No install, works on any distribution. |
+| Linux | `Audioly-<version>-linux-x86_64.AppImage` | `chmod +x` it and run. For Ubuntu 24.04 or compatible newer desktop distributions. |
 | Linux | `Audioly-<version>-linux-amd64.deb` | `sudo apt install ./Audioly-*.deb` on Debian, Ubuntu and derivatives. |
 | Linux | `Audioly-<version>-linux-x86_64.rpm` | `sudo dnf install ./Audioly-*.rpm` on Fedora, RHEL and openSUSE. |
 | Windows | `Audioly-<version>-windows-x64-setup.exe` | The ordinary installer. Installs for the current user, so it never asks for an administrator. |
 | Windows | `Audioly-<version>-windows-x64.msi` | The same thing for anyone who deploys by MSI. |
-| Windows | `Audioly-<version>-windows-x64-portable.zip` | Unzip anywhere and run `Audioly.exe`. Writes nothing outside the folder. |
+| Windows | `Audioly-<version>-windows-x64-portable.zip` | Unzip and run `Audioly.exe`. Settings and caches use your user profile. |
 
 **macOS Gatekeeper.** Unsigned binaries built locally or downloaded outside the Mac App Store
 may trigger a macOS security prompt ("Audioly is damaged and can't be opened" or "unidentified developer").

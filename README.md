@@ -107,6 +107,21 @@ Android **8.0 or newer**. Official releases install as **Audioly**, with package
 
 Early Dev builds cannot receive an automatic notice because their update feed was disabled. Newer Dev builds with the GitHub feed can show an update prompt. A separate **Audioly Upgrade** helper requires migration after installation and must use the original Dev signing key. See the [migration guide](docs/PUBLISHING.md#retired-dev-channel).
 
+## Desktop
+
+Audioly includes a Compose desktop application for **Windows, Linux, and macOS**. Building requires **JDK 21**; packaged applications include their own runtime. The desktop workflow attaches installers and portable downloads to the matching GitHub release after all platform builds pass. See [DESKTOP.md](DESKTOP.md) for build commands. Desktop Spotify currently supports Canvas setup; the connected playlist browser is Android-only.
+
+| Platform | Choose your download |
+| --- | --- |
+| Android | `Audioly.apk` |
+| Windows x64 | Setup `.exe`, `.msi`, or portable `.zip` |
+| Linux x64 | `.AppImage`, `.deb`, or `.rpm` |
+| macOS Apple Silicon | `macos-arm64.dmg`, `.pkg`, or `.zip` |
+| macOS Intel | `macos-x64.dmg`, `.pkg`, or `.zip` |
+| Source | `Audioly-<version>-source.zip`; GitHub tag `.zip` or `.tar.gz` |
+
+Use `Audioly.apk.sha256` for Android and `Audioly-desktop-SHA256SUMS.txt` for desktop verification.
+
 ## Build it yourself
 
 Requirements: **JDK 21** (Android bytecode targets Java 17), Android SDK **37** (target SDK 36), and the CMake/NDK components requested by Gradle. Minimum supported Android version: **8.0 / API 26**.
@@ -128,8 +143,7 @@ On Windows, use `gradlew.bat`. Local debug APKs are written to `app/build/output
 
 For a production build, run `./gradlew :app:assembleProdRelease`. Configure your own `keystore.properties` from the example before distributing it; without signing configuration the release output is unsigned. Keep the same signing key for future updates.
 
-Audioly is now **2.0.0**. Versions are controlled by `version.properties` and
-`python scripts/release_version.py bump`: **2.0.9 → 2.1.0**, **2.9.9 → 3.0.0**.
+Release metadata lives in `version.properties`. See the [publishing guide](docs/PUBLISHING.md) for version bumps, signing, and release workflows.
 See the [Dev migration instructions](docs/PUBLISHING.md#retired-dev-channel) before moving an old Dev installation.
 
 ## Project map
@@ -146,21 +160,6 @@ docs/        Integration notes, publishing guide and screenshots
 ```
 
 The party backend and website are optional for local development. See [backend documentation](backend/README.md) and [deployment instructions](deployment/README.md). Deployment requires your own infrastructure and credentials; CI never deploys automatically.
-
-## Desktop
-
-Audioly includes a Compose desktop application for **Windows, Linux, and macOS**. Building requires **JDK 21**; packaged applications include their own runtime. The desktop workflow attaches installers and portable downloads to the matching GitHub release after all platform builds pass. See [DESKTOP.md](DESKTOP.md) for build commands. Desktop Spotify currently supports Canvas setup; the connected playlist browser is Android-only.
-
-| Platform | Choose your download |
-| --- | --- |
-| Android | `Audioly.apk` |
-| Windows x64 | Setup `.exe`, `.msi`, or portable `.zip` |
-| Linux x64 | `.AppImage`, `.deb`, or `.rpm` |
-| macOS Apple Silicon | `macos-arm64.dmg`, `.pkg`, or `.zip` |
-| macOS Intel | `macos-x64.dmg`, `.pkg`, or `.zip` |
-| Source | GitHub's source `.zip` or `.tar.gz` |
-
-Use `Audioly.apk.sha256` for Android and `Audioly-desktop-SHA256SUMS.txt` for desktop verification.
 
 ## Contributing
 
