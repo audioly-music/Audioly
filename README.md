@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/images/audioly-hero.svg" alt="Audioly — Find your frequency" width="100%" /></p>
+<p align="center"><img src="docs/images/banner.png" alt="Audioly — Your music in full colour, with real player and queue screens" width="100%" /></p>
 
 <p align="center">
   <strong>Your music. Your space. Your frequency.</strong><br />

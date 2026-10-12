@@ -6,6 +6,8 @@ api.audioly.me {
 audioly.me, www.audioly.me {
     root * /var/www/audioly
     encode gzip
+    redir /downloads/Audioly-dev-arm64.apk https://github.com/audioly-music/Audioly/releases/latest/download/Audioly.apk 302
+    redir /downloads/Audioly-dev-arm64.apk.sha256 https://github.com/audioly-music/Audioly/releases/latest/download/Audioly.apk.sha256 302
     handle /invite/* {
         rewrite * /invite.html
         file_server

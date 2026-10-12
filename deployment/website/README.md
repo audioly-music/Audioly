@@ -20,9 +20,9 @@ The server configuration is deployment/native/Caddyfile. Validate it with caddy 
 
 The landing page uses local assets and a canvas animation. Motion can be paused, respects reduced-motion preferences, and suspends when offscreen or the browser tab is hidden. No microphone access or audio autoplay is used.
 
-screenshots.json supplies the real app images and captions. Keep private notifications and account details out of published screenshots. The downloads directory contains Audioly Dev v1.7 for ARM64, its SHA-256 checksum, and a corresponding Android source archive. APK signing keys and local credentials are excluded from the source archive.
+screenshots.json supplies the real app images and captions. Keep private notifications and account details out of published screenshots. Public download buttons point to the signed production Audioly APK on GitHub Releases. Legacy Dev APK URLs redirect to that production download. Signing keys and local credentials are excluded from source archives.
 
-/.well-known/assetlinks.json is served directly on both audioly.me and www.audioly.me without redirects. The current fingerprint is for the local debug signing key; release builds require the actual release certificate fingerprint.
+/.well-known/assetlinks.json is served directly on both audioly.me and www.audioly.me without redirects. Production uses the release certificate fingerprint; the Dev entry retains its original debug certificate for compatibility.
 
 /invite/CODE preserves optional custom-server query parameters and opens Audioly from a user-activated button. The app checks whether the party is active.
 

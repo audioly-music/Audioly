@@ -27,6 +27,10 @@ val targetOs: String = (providers.gradleProperty("audioly.target").orNull ?: whe
 val hostArch = System.getProperty("os.arch").lowercase()
 val isArm64 = hostArch == "aarch64" || hostArch == "arm64"
 
+// ONNX Runtime 1.24+ no longer bundles Intel macOS natives. Keep the
+// compatible runtime on Intel Macs; model loading remains checked in CI.
+val onnxRuntimeVersion = if (targetOs == "macos" && !isArm64) "1.23.2" else "1.29.0"
+
 // Installer metadata uses the same three-part version shown in the app.
 val nativePackageVersion = appVersion.substringBefore('-')
 
@@ -85,7 +89,7 @@ dependencies {
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.4")
 
     // Automix runs the same two models the Android build does.
-    implementation("com.microsoft.onnxruntime:onnxruntime:1.29.0")
+    implementation("com.microsoft.onnxruntime:onnxruntime:$onnxRuntimeVersion")
 
     // Decoding, resampling and demuxing for the audio engine.
     implementation("org.bytedeco:javacpp:$javacppVersion")
@@ -373,7 +377,14 @@ tasks.named<ProcessResources>("processResources") {
     // The Automix models, taken from the Android module rather than copied into this one.
     from(rootProject.file("app/src/main/assets")) {
         include("*.onnx")
+        if (targetOs == "macos" && !isArm64) exclude("beat_this_int8.onnx")
         into("models")
+    }
+    if (targetOs == "macos" && !isArm64) {
+        from(project.file("packaging/intel-mac-models")) {
+            include("beat_this_int8.onnx")
+            into("models")
+        }
     }
 }
 

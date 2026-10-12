@@ -6,6 +6,12 @@ the supported Compose Multiplatform desktop model.
 
 The desktop target uses Java 21.
 
+Intel macOS packages use ONNX Runtime 1.23.2, which includes Intel Mac natives.
+Their beat model uses an equivalent unsigned weight representation for the older
+CPU kernel. The conversion is reproducible with
+`python desktopApp/packaging/prepare-intel-mac-model.py` (requires `onnx` and `numpy`).
+Apple Silicon, Windows, and Linux use ONNX Runtime 1.29.0 and the original model.
+
 On macOS (Apple Silicon or Intel), run it with a Java 21 JDK available in your environment:
 
 ```bash
@@ -30,6 +36,9 @@ running `gradlew.bat :desktopApp:run`.
 Every download on the [releases page](https://github.com/audioly-music/Audioly/releases) carries its own Java
 runtime, the FFmpeg and ONNX natives, the Automix analyser and its models.
 Nothing else has to be installed first — no JDK, no codec pack.
+
+`Audioly-<version>-source.zip` contains the source used for the desktop assets,
+including any compatibility fixes made after the Android release tag.
 
 | Platform | Download | Notes |
 |---|---|---|

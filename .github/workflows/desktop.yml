@@ -261,6 +261,7 @@ jobs:
             macos-x64.dmg macos-x64.pkg macos-x64.zip; do
             test -s "downloads/Audioly-$version-$suffix"
           done
+          git archive --format=zip --output="downloads/Audioly-$version-source.zip" HEAD
           cd downloads
           sha256sum Audioly-* > Audioly-desktop-SHA256SUMS.txt
       - name: Attach files to the production release
