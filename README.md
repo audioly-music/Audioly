@@ -149,7 +149,18 @@ The party backend and website are optional for local development. See [backend d
 
 ## Desktop
 
-Audioly includes a Compose desktop application for **Windows, Linux, and macOS**. Building requires **JDK 21**; packaged applications include their own runtime. Desktop packages are built through the desktop workflow; Android APK releases do not include desktop installers. See [DESKTOP.md](DESKTOP.md) for build commands. Desktop Spotify currently supports Canvas setup; the connected playlist browser is Android-only.
+Audioly includes a Compose desktop application for **Windows, Linux, and macOS**. Building requires **JDK 21**; packaged applications include their own runtime. The desktop workflow attaches installers and portable downloads to the matching GitHub release after all platform builds pass. See [DESKTOP.md](DESKTOP.md) for build commands. Desktop Spotify currently supports Canvas setup; the connected playlist browser is Android-only.
+
+| Platform | Choose your download |
+| --- | --- |
+| Android | `Audioly.apk` |
+| Windows x64 | Setup `.exe`, `.msi`, or portable `.zip` |
+| Linux x64 | `.AppImage`, `.deb`, or `.rpm` |
+| macOS Apple Silicon | `macos-arm64.dmg`, `.pkg`, or `.zip` |
+| macOS Intel | `macos-x64.dmg`, `.pkg`, or `.zip` |
+| Source | GitHub's source `.zip` or `.tar.gz` |
+
+Use `Audioly.apk.sha256` for Android and `Audioly-desktop-SHA256SUMS.txt` for desktop verification.
 
 ## Contributing
 

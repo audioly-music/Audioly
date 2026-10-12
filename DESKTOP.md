@@ -72,7 +72,7 @@ itself, because Windows expects it to be a system component.
 
 jpackage builds a package by driving the target platform's own tooling, so each
 one has to be built on the platform it is for. This is what CI does; see
-[`.github/workflows/desktop.yml`](.github/workflows/release.yml).
+[`.github/workflows/desktop.yml`](.github/workflows/desktop.yml).
 
 On macOS:
 
