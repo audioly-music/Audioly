@@ -38,6 +38,10 @@ The Android suite passed 976 unit tests. The signed production APK builds with p
 
 Desktop passed 342 tests, the shared core passed 43 tests, and the shared UI passed 34 tests: 1,395 passing tests in total. Desktop compilation passed on Windows. Live Spotify account access still needs a device check; the automated tests do not verify a personal account session.
 
+The live Genius provider test is opt-in with `AUDIOLY_LIVE_TESTS=1`.
+Normal CI runs its four offline parsing tests and reports the live test as skipped,
+so provider outages or runner blocking do not break the deterministic test suite.
+
 The Windows app image and portable archive also build locally. Local packaging skips the Automix analyser and native Windows frame because this PC lacks MinGW/CMake/Ninja. The desktop workflow installs those tools and asserts that the native libraries are bundled. Linux and macOS packages require their workflow jobs; they were not built locally.
 
 Version 2.0.0 ports the upstream desktop/shared modules and replaces the previous Spotify implementation. See DESKTOP.md and docs/SPOTIFY_INTEGRATION.md for platform differences.
@@ -55,6 +59,11 @@ After testing a release, commit the version change and release notes, then push
 the matching tag (for example `v2.0.0`). The release workflow validates the tag,
 builds the signed production APK and publishes `Audioly.apk` plus its checksum
 to GitHub Releases. A manual workflow run builds artifacts without publishing.
+
+The desktop workflow builds Windows installers/portable ZIP, Linux AppImage/deb/rpm,
+and macOS DMG/PKG/ZIP for Apple Silicon and Intel. Tagged builds attach all 12 files
+and a checksum manifest to the matching production release after every platform
+passes. Manual desktop runs can also enable the publish input for an existing release.
 
 ### Retired Dev channel
 
