@@ -13,4 +13,3 @@ Early Dev builds had no active update feed and cannot be remotely forced to inst
 
 Before moving, export settings and listening history from Dev and restore the backup in Audioly. Sign in again in the production app. Downloads, accounts and local playlists are not part of that backup; keep Dev installed until you have checked your data.
 
-Future versions use one digit each for minor and patch: **2.0.9 → 2.1.0**, **2.9.9 → 3.0.0**.

@@ -1,0 +1,24 @@
+name: Update published release notes
+on:
+  push:
+    branches: [main]
+    paths: ['docs/RELEASE_NOTES.md', '.github/workflows/release-notes.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  notes:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - name: Update notes for the existing release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 scripts/release_version.py validate
+          tag="v$(python3 scripts/release_version.py show)"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release edit "$tag" --notes-file docs/RELEASE_NOTES.md
+          else
+            echo "Release $tag has not been published yet; its build will use these notes."
+          fi
