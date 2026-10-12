@@ -80,8 +80,8 @@ android {
         // Haze falls back to a translucent scrim below that.
         minSdk = 26
         targetSdk = 36
-        versionCode = 31
-        versionName = "1.10.0"
+        versionCode = rootProject.extra["audiolyVersionCode"] as Int
+        versionName = rootProject.extra["audiolyVersionName"] as String
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -119,7 +119,7 @@ android {
         create("dev") {
             dimension = "env"
             applicationId = "com.dev.audioly"
-            resValue("string", "app_name", "Audioly Dev")
+            resValue("string", "app_name", "Audioly Upgrade")
         }
         create("prod") {
             dimension = "env"

@@ -357,6 +357,10 @@ class MainActivity : AppCompatActivity() {
                 ThemeMode.DARK -> true
             }
             AudiolyTheme(darkTheme = darkTheme) {
+                if (AppUpdateChecker.isDevMigration) {
+                    com.music.audioly.ui.screens.DevMigrationScreen()
+                    return@AudiolyTheme
+                }
                 // The glass surfaces sample this layer, and a layer records only
                 // what is drawn into it — which, for Audioly, is a page that
                 // paints no background of its own. Everywhere a page is not

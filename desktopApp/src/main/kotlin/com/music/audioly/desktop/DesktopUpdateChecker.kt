@@ -35,7 +35,7 @@ internal object DesktopUpdateChecker {
     private const val LATEST_RELEASE_URL =
         "https://api.github.com/repos/audioly-music/Audioly/releases/latest"
 
-    val currentVersion: String = System.getProperty("audioly.version") ?: "1.10.0"
+    val currentVersion: String = DesktopBuildInfo.version
 
     private val json = Json { ignoreUnknownKeys = true }
 

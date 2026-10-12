@@ -1,24 +1,25 @@
-<p align="center"><img src="docs/images/banner.png" alt="Audioly — Your music. Your space." width="100%" /></p>
+<p align="center"><img src="docs/images/audioly-hero.svg" alt="Audioly — Find your frequency" width="100%" /></p>
 
 <p align="center">
-  <strong>A personal music app for Android and desktop, built around the way you listen.</strong><br />
-  Discover music, bring your playlists, save favourites, and listen together.
+  <strong>Your music. Your space. Your frequency.</strong><br />
+  Discover your next favourite. Bring your playlists. Share the moment.
 </p>
 
 <p align="center">
+  <a href="https://github.com/audioly-music/Audioly/releases/latest"><strong>Download for Android</strong></a> ·
   <a href="https://audioly.me">Website</a> ·
-  <a href="#inside-audioly">Features</a> ·
+  <a href="#a-little-more-than-play">Features</a> ·
   <a href="#build-it-yourself">Build</a> ·
   <a href="docs/PUBLISHING.md">Publishing guide</a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Android-8.0%2B-87F4D4?style=flat-square" alt="Android 8.0 and newer" />
-  <img src="https://img.shields.io/badge/Kotlin-Jetpack_Compose-7980FF?style=flat-square" alt="Kotlin and Jetpack Compose" />
-  <img src="https://img.shields.io/badge/license-GPL--3.0-9BACE0?style=flat-square" alt="GPL version 3" />
+  <img src="https://img.shields.io/badge/ANDROID-8.0%2B-7CF1D5?style=for-the-badge&amp;labelColor=101527" alt="Android 8.0 and newer" />
+  <img src="https://img.shields.io/badge/RELEASE-2.0.0-7584FF?style=for-the-badge&amp;labelColor=101527" alt="Audioly 2.0.0" />
+  <img src="https://img.shields.io/badge/LICENSE-GPL_3.0-A9B9D4?style=for-the-badge&amp;labelColor=101527" alt="GPL version 3" />
 </p>
 
-## Made for the music
+## Find your frequency
 
 A full-screen player that follows the artwork. Playlists that feel at home. Lyrics, a flexible queue, and a library that travels with you.
 
@@ -28,18 +29,60 @@ A full-screen player that follows the artwork. Playlists that feel at home. Lyri
   <img src="docs/images/search.png" width="31%" alt="Music search in Audioly" />
 </p>
 
-<sub>Real device captures. Music, artwork, artist names and service marks belong to their respective owners. Catalog availability varies.</sub>
+<p align="center"><sub>Player · Queue · Discovery — real Audioly screens, captured on Android.</sub></p>
 
-## Inside Audioly
+## A little more than play
 
-| Your listening | What you get |
-| --- | --- |
-| Discover | YouTube Music browsing and search. |
-| Bring your library | Spotify playlists and liked songs, public playlist imports, local audio, and saved favourites. |
-| Make it yours | Artwork-led player colours, lyrics, equalizer, and queue controls. |
-| Take it offline | Downloads with progress and retry controls, subject to source availability and your network settings. |
-| Listen together | Shared parties with a room code or an `audioly.me` invitation link. Requires a running party server. |
-| Keep listening | Background playback, media controls, Android Auto integration, and listening history. |
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### A sound of your own
+
+- Browse and search the YouTube Music catalogue.
+- Shape the flow with gapless playback and adjustable crossfade.
+- Try Automix for beat-aware transitions. **Beta.**
+- Save tracks for offline listening and play local audio.
+- Keep listening in the background or through Android Auto.
+
+</td>
+<td width="50%" valign="top">
+
+### A player that feels alive
+
+- Colours drawn from the artwork you're listening to.
+- Animated Canvas artwork when available.
+- Synchronized lyrics, including word timing where supported.
+- A flexible queue, sleep timer, and playback speed controls.
+- Equalizer access and separate Wi-Fi/mobile quality preferences.
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### Bring your collection
+
+- Connect Spotify for playlists and Liked Songs on Android.
+- Import supported public playlist links.
+- Keep favourites, local music, and listening history close.
+- Connect supported scrobbling and presence services in settings.
+
+</td>
+<td width="50%" valign="top">
+
+### Share the moment
+
+- Create a Listen Together party with a shared queue.
+- Invite friends with a room code or an Audioly link.
+- Host your own party backend with the deployment guides.
+- Parties require a running server and a network connection.
+
+</td>
+</tr>
+</table>
+
+Lossless audio requires a compatible configured module source. Lyrics, artwork, downloads, and account access depend on provider availability.
 
 ### How Spotify playback works
 
@@ -49,7 +92,20 @@ See [Spotify integration notes](docs/SPOTIFY_INTEGRATION.md) for implementation 
 
 ## Get Audioly
 
-Visit [audioly.me](https://audioly.me) for the project website. This source snapshot does not bundle an APK. Public downloads should use the signed production APK from GitHub Releases: it installs as **Audioly** (`com.music.audioly`). The [release workflow and checklist](docs/PUBLISHING.md#github-apk-downloads) describe how to build and publish it. Never share signing keys or account tokens.
+**[Download the latest signed Android APK →](https://github.com/audioly-music/Audioly/releases/latest)**
+
+1. Download **Audioly.apk** from the release assets.
+2. Open it and approve Android's installation request. Enable “Install unknown apps” for your browser or file manager if asked.
+3. Open **Audioly** and start listening.
+
+Android **8.0 or newer**. Official releases install as **Audioly**, with package `com.music.audioly`. Verify downloads with the release checksum. Visit [audioly.me](https://audioly.me) for the website.
+
+### Moving from Audioly Dev
+
+> [!IMPORTANT]
+> **The public Dev channel is retired.** Move to Audioly 2.0.0 or newer. Export your settings and listening history from Dev, install Audioly, restore the backup, and sign in again. Keep Dev until you have checked your data: downloaded audio, local playlists, and account sessions are not included in the backup.
+
+Early Dev builds cannot receive an automatic notice because their update feed was disabled. Newer Dev builds with the GitHub feed can show an update prompt. A separate **Audioly Upgrade** helper requires migration after installation and must use the original Dev signing key. See the [migration guide](docs/PUBLISHING.md#retired-dev-channel).
 
 ## Build it yourself
 
@@ -60,17 +116,21 @@ Requirements: **JDK 21** (Android bytecode targets Java 17), Android SDK **37** 
 3. Build and test:
 
 ```bash
-./gradlew :app:testDevDebugUnitTest :app:assembleDevDebug
+./gradlew :app:testDevDebugUnitTest :app:assembleProdDebug
 ```
 
-On Windows, use `gradlew.bat`. APKs are written to `app/build/outputs/apk/dev/debug/`.
+On Windows, use `gradlew.bat`. Local debug APKs are written to `app/build/outputs/apk/prod/debug/`; public downloads use the signed release build.
 
 | Variant | Application ID | Purpose |
 | --- | --- | --- |
-| Dev | `com.dev.audioly` | Development and testing; separate app data. |
+| Dev | `com.dev.audioly` | Retired-channel migration, labelled Audioly Upgrade. |
 | Prod | `com.music.audioly` | Distribution builds. |
 
 For a production build, run `./gradlew :app:assembleProdRelease`. Configure your own `keystore.properties` from the example before distributing it; without signing configuration the release output is unsigned. Keep the same signing key for future updates.
+
+Audioly is now **2.0.0**. Versions are controlled by `version.properties` and
+`python scripts/release_version.py bump`: **2.0.9 → 2.1.0**, **2.9.9 → 3.0.0**.
+See the [Dev migration instructions](docs/PUBLISHING.md#retired-dev-channel) before moving an old Dev installation.
 
 ## Project map
 
@@ -89,7 +149,7 @@ The party backend and website are optional for local development. See [backend d
 
 ## Desktop
 
-Audioly includes a Compose desktop application for Windows, Linux and macOS. Building requires **JDK 21**; packaged applications include their own runtime. See [DESKTOP.md](DESKTOP.md) for build commands. Desktop Spotify currently supports Canvas setup; the connected playlist browser is Android-only.
+Audioly includes a Compose desktop application for **Windows, Linux, and macOS**. Building requires **JDK 21**; packaged applications include their own runtime. Desktop packages are built through the desktop workflow; Android APK releases do not include desktop installers. See [DESKTOP.md](DESKTOP.md) for build commands. Desktop Spotify currently supports Canvas setup; the connected playlist browser is Android-only.
 
 ## Contributing
 

@@ -47,6 +47,10 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
 
+    <queries>
+        <package android:name="com.music.audioly" />
+    </queries>
+
     <application
         android:name=".AudiolyApplication"
         android:allowBackup="true"

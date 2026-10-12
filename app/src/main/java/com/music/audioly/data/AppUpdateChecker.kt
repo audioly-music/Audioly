@@ -14,7 +14,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.contentOrNull
-import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
 import okhttp3.Request
 import java.io.File
@@ -47,7 +46,15 @@ object AppUpdateChecker {
 
     private val json = Json { ignoreUnknownKeys = true }
 
-    private val _available = MutableStateFlow<UpdateInfo?>(null)
+    val isDevMigration = BuildConfig.APPLICATION_ID == "com.dev.audioly"
+    private val _available = MutableStateFlow<UpdateInfo?>(
+        if (isDevMigration) UpdateInfo(
+            version = AudiolyUpdatePolicy.MIGRATION_VERSION,
+            releaseUrl = "https://github.com/audioly-music/Audioly/releases/tag/v2.0.0",
+            apkUrl = "https://github.com/audioly-music/Audioly/releases/download/v2.0.0/Audioly.apk",
+            notes = null,
+        ) else null,
+    )
     val available = _available.asStateFlow()
 
     /** Where this update's APK download currently stands, for the dialog's progress row. */
@@ -77,7 +84,8 @@ object AppUpdateChecker {
             val apkUrl = apkAssetUrl(release)
             val notes = release["body"]?.jsonPrimitive?.contentOrNull
             val latest = tag.removePrefix("v")
-            if (isNewer(latest, BuildConfig.VERSION_NAME)) {
+            if (AudiolyUpdatePolicy.shouldOffer(latest, BuildConfig.VERSION_NAME, isDevMigration) &&
+                (!isDevMigration || apkUrl != null)) {
                 _available.value = UpdateInfo(latest, url, apkUrl, notes)
             }
         }
@@ -94,22 +102,12 @@ object AppUpdateChecker {
     }
 
     /**
-     * The release usually carries exactly one `.apk`; take its direct download
-     * URL. A release without one (source-only draft, renamed asset) leaves
+     * Only the canonical production asset, `Audioly.apk`, is eligible. A release
+     * without it (source-only draft, renamed asset) leaves
      * [UpdateInfo.apkUrl] null and the UI falls back to opening the releases
      * page as before.
      */
-    private fun apkAssetUrl(release: JsonObject): String? = runCatching {
-        release["assets"]?.jsonArray
-            ?.mapNotNull { it as? JsonObject }
-            ?.firstOrNull { asset ->
-                asset["name"]?.jsonPrimitive?.contentOrNull?.endsWith(".apk", ignoreCase = true) == true &&
-                    asset["state"]?.jsonPrimitive?.contentOrNull == "uploaded"
-            }
-            ?.get("browser_download_url")
-            ?.jsonPrimitive
-            ?.contentOrNull
-    }.getOrNull()
+    private fun apkAssetUrl(release: JsonObject): String? = AudiolyUpdatePolicy.productionApkUrl(release)
 
     /**
      * Streams the current update's APK into the app cache, reporting progress
@@ -155,6 +153,14 @@ object AppUpdateChecker {
                         }
                     }
                 }
+            }
+            val archive = context.packageManager.getPackageArchiveInfo(target.absolutePath, 0)
+                ?: error("The downloaded file is not a valid Android app. Try again.")
+            check(archive.packageName == AudiolyUpdatePolicy.PRODUCTION_PACKAGE) {
+                "This download is not the Audioly production app."
+            }
+            check(AudiolyUpdatePolicy.compare(archive.versionName.orEmpty(), info.version) >= 0) {
+                "The downloaded app is older than the required update."
             }
             _download.value = DownloadState.Ready(target)
         }.onFailure { error ->
@@ -207,31 +213,4 @@ object AppUpdateChecker {
         )
     }
 
-    /** A version split into its numeric dotted parts and whether it carries a "-suffix" (e.g. "-beta2"). */
-    private data class ParsedVersion(val parts: List<Int>, val isPreRelease: Boolean)
-
-    private fun parseVersion(raw: String): ParsedVersion {
-        val dash = raw.indexOf('-')
-        val base = if (dash >= 0) raw.substring(0, dash) else raw
-        return ParsedVersion(base.split(".").map { it.toIntOrNull() ?: 0 }, dash >= 0)
-    }
-
-    /**
-     * Numeric, dot-separated comparison — "1.10" outranks "1.9" — with one
-     * extra rule: a "-betaN" build (see the debug build type's
-     * `versionNameSuffix` in app/build.gradle.kts) is treated as older than a
-     * plain release of the same numbers, since the beta by definition predates
-     * the tag it was testing toward. Without this, a beta and the release it
-     * matches compare equal and testers never get nudged onto the real build.
-     */
-    private fun isNewer(latest: String, current: String): Boolean {
-        val l = parseVersion(latest)
-        val c = parseVersion(current)
-        for (i in 0 until maxOf(l.parts.size, c.parts.size)) {
-            val a = l.parts.getOrElse(i) { 0 }
-            val b = c.parts.getOrElse(i) { 0 }
-            if (a != b) return a > b
-        }
-        return c.isPreRelease && !l.isPreRelease
-    }
 }

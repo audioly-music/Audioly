@@ -432,7 +432,7 @@ internal class DesktopAddonClient(rawBaseUrl: String) {
         private const val MAX_RETRIES = 2
         private const val BACKOFF_BASE_MS = 500L
         private const val BACKOFF_CAP_MS = 8_000L
-        internal val USER_AGENT = "Audioly/v${System.getProperty("audioly.version") ?: "1.10.0"}"
+        internal val USER_AGENT = "Audioly/v${DesktopBuildInfo.version}"
         private const val PROBE_QUERY = "music"
 
         private val LOSSLESS_WORDS = listOf("lossless", "flac", "hifi", "hi-res", "hires", "max", "best")

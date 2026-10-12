@@ -70,3 +70,6 @@ dist/
 hs_err_pid*.log
 replay_pid*.log
 *.hprof
+# Local Python tooling caches.
+__pycache__/
+*.pyc

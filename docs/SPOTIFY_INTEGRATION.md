@@ -1,6 +1,6 @@
 # Spotify integration in Audioly
 
-Audioly 1.10.0 replaces its former extended Spotify implementation with the upstream Android Spotify library and playlist importer. The former Spotify Home/search sources, Spotify-only mode, recommendation engine and manual-match overrides are removed.
+Audioly 2.0.0 replaces its former extended Spotify implementation with the upstream Android Spotify library and playlist importer. The former Spotify Home/search sources, Spotify-only mode, recommendation engine and manual-match overrides are removed.
 
 ## Connect and browse
 

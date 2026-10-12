@@ -1,13 +1,28 @@
 name: Build Audioly release
 on:
   workflow_dispatch:
+  push:
+    tags: ['v[0-9]*']
 permissions:
   contents: read
 jobs:
   release:
     runs-on: ubuntu-24.04
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v5
+      - name: Validate release version
+        env:
+          RELEASE_REF: ${{ github.ref }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          if [[ "$RELEASE_REF" == refs/tags/* ]]; then
+            python3 scripts/release_version.py validate --tag "$RELEASE_TAG"
+          else
+            python3 scripts/release_version.py validate
+          fi
+          python3 -m unittest discover -s scripts -p 'test_*.py'
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -61,6 +76,8 @@ jobs:
           badging=$("$tools" dump badging "$apk")
           printf '%s\n' "$badging" | grep -q "^package: name='com.music.audioly'"
           printf '%s\n' "$badging" | grep -q "^application-label:'Audioly'$"
+          version=$(python3 scripts/release_version.py show)
+          printf '%s\n' "$badging" | grep -Fq "versionName='$version'"
           "$(dirname "$tools")/apksigner" verify "$apk"
           mkdir -p release
           cp "$apk" release/Audioly.apk
@@ -71,6 +88,14 @@ jobs:
           name: Audioly-release
           path: release/*
           if-no-files-found: error
+      - name: Publish production release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$RELEASE_TAG" release/Audioly.apk release/Audioly.apk.sha256 \
+            --verify-tag --title "Audioly ${RELEASE_TAG#v}" --notes-file docs/RELEASE_NOTES.md --latest
       - name: Remove signing material
         if: always()
         run: rm -f keystore.properties "$RUNNER_TEMP/audioly-release.jks"

@@ -6463,7 +6463,7 @@ class PlaybackService : MediaLibraryService() {
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? =
-        mediaSession
+        if (com.music.audioly.data.AppUpdateChecker.isDevMigration) null else mediaSession
 
     /**
      * Called by Android when the user swipes this app's task away from the

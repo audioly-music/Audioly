@@ -7,7 +7,11 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 val appVersion: String = providers.gradleProperty("audioly.version").orNull
     ?.removePrefix("v")
     ?.takeIf { it.isNotBlank() }
-    ?: "1.10.0"
+    ?: rootProject.extra["audiolyVersionName"] as String
+
+require(Regex("[1-9][0-9]*\\.[0-9]\\.[0-9](-[A-Za-z0-9.]+)?").matches(appVersion)) {
+    "Desktop versions must roll over from 2.9.9 to 3.0.0; minor and patch must be single digits."
+}
 
 /** Which platform this build is *for*, which is the host unless told otherwise. */
 val hostIsWindows = System.getProperty("os.name").contains("Windows", ignoreCase = true)
@@ -23,11 +27,8 @@ val targetOs: String = (providers.gradleProperty("audioly.target").orNull ?: whe
 val hostArch = System.getProperty("os.arch").lowercase()
 val isArm64 = hostArch == "aarch64" || hostArch == "arm64"
 
-// Windows installer metadata requires MAJOR.MINOR.BUILD even though the app's public version is
-// intentionally displayed without a patch number (1.7 rather than 1.7.0).
-// The build number is the desktop version code; it also keeps "-beta1" out of the numeric installer version.
-val desktopVersionCode = 31
-val nativePackageVersion = appVersion.substringBefore('-').split('.').take(2).joinToString(".") + ".$desktopVersionCode"
+// Installer metadata uses the same three-part version shown in the app.
+val nativePackageVersion = appVersion.substringBefore('-')
 
 // FFmpeg decodes audio; see DesktopAudioDecoder.
 val javacppVersion = "1.5.12"
@@ -356,6 +357,10 @@ val buildWindowNative by tasks.registering {
 }
 
 tasks.named<ProcessResources>("processResources") {
+    inputs.property("audiolyVersion", appVersion)
+    filesMatching("audioly-version.properties") {
+        expand("version" to appVersion)
+    }
     dependsOn(buildAnalysisNative, buildWindowNative)
     from(analysisNativeDir) {
         include("*.so", "*.dll", "*.dylib")

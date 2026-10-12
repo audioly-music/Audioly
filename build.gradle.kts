@@ -42,3 +42,15 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "2.3.20" apply false
     id("org.jetbrains.compose") version "1.10.3" apply false
 }
+
+val releaseVersion = java.util.Properties().apply {
+    file("version.properties").inputStream().use(::load)
+}
+val releaseName = releaseVersion.getProperty("versionName")
+require(Regex("[1-9][0-9]*\\.[0-9]\\.[0-9]").matches(releaseName)) {
+    "Use major.minor.patch with single-digit minor and patch numbers (2.9.9 → 3.0.0)."
+}
+val releaseCode = releaseVersion.getProperty("versionCode").toInt()
+require(releaseCode in 1..2_100_000_000) { "Invalid Android versionCode" }
+extra["audiolyVersionName"] = releaseName
+extra["audiolyVersionCode"] = releaseCode

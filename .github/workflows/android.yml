@@ -1,5 +1,9 @@
 name: Android checks
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
@@ -15,4 +19,5 @@ jobs:
         run: bash scripts/ci/setup-android-sdk.sh
       - uses: gradle/actions/setup-gradle@v4
       - run: chmod +x gradlew
+      - run: python3 scripts/release_version.py validate && python3 -m unittest discover -s scripts -p 'test_*.py'
       - run: ./gradlew :app:testDevDebugUnitTest :app:assembleDevDebug --max-workers=2
