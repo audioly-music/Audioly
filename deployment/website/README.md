@@ -1,36 +1,34 @@
 # Audioly website
 
-Static landing page and Android invitation routes, hosted on the Audioly Ubuntu VPS with Caddy.
+Static landing page, addon documentation, and Android party invites. Served by Caddy on the Audioly Ubuntu VPS.
 
-Source: deployment/website/public
-Public URL: https://audioly.me
-API: https://api.audioly.me
+- Website: https://audioly.me
+- Addon guide: https://audioly.me/docs/
+- Party API: https://api.audioly.me
+- Source: deployment/website/public
 
 ## Preview
 
-python -m http.server 8765 --directory deployment/website/public
+```sh
+python -m http.server 8766 --directory deployment/website/public
+```
 
-Visit http://localhost:8765. Caddy provides the /invite/CODE rewrite in production; the plain development server does not.
+Open http://localhost:8766. Production Caddy rewrites /invite/CODE to invite.html; Python's static server does not implement that rewrite. No frontend build or Node service is required.
+
+## Page behavior
+
+The poster hero uses a generated headphone cutout, local fonts, and HTML typography. Download and GitHub buttons are visible on the first screen. The page includes original animated demo lyrics, scroll-driven perspective effects, real Audioly app screens, platform download tabs, installation FAQs, and personal author links.
+
+Motion respects reduced-motion preferences. The lyrics preview has an explicit play/pause control; visitors who request reduced motion can start it themselves. Decorative motion can be paused from the footer. There is no audio autoplay or microphone access.
+
+Download links have working static fallbacks for the public 2.0.0 release. When GitHub's latest-release API succeeds, the page updates available matching assets and version labels. All 16 files from the current release are linked, including Intel and Apple Silicon Mac packages. Public Android downloads install as Audioly.
+
+The addon documentation includes searchable sections, copyable code examples, endpoint schemas, quality negotiation, immersive formats, downloads, testing, and troubleshooting. Its examples describe Audioly's existing addon implementation. Example media domains must be replaced with actual reachable media.
 
 ## Publish
 
-Archive the contents of public, including .well-known, upload to the VPS, and extract into /var/www/audioly. Files should be readable by Caddy. No build step or Node service is required.
+Back up the current HTML, CSS, and JavaScript. Upload and copy public files into /var/www/audioly, including assets and docs. Preserve invite.html and .well-known/assetlinks.json. Keep the API reverse proxy and party invite rewrite configured. Static content changes do not require restarting Caddy.
 
-The server configuration is deployment/native/Caddyfile. Validate it with caddy validate before reloading Caddy. The existing API reverse proxy must remain configured.
+Legacy Dev APK URLs redirect to the public production APK. Android app-link verification retains the production and original Dev signing certificates.
 
-The landing page uses local assets and a canvas animation. Motion can be paused, respects reduced-motion preferences, and suspends when offscreen or the browser tab is hidden. No microphone access or audio autoplay is used.
-
-screenshots.json supplies the real app images and captions. Keep private notifications and account details out of published screenshots. Public download buttons point to the signed production Audioly APK on GitHub Releases. Legacy Dev APK URLs redirect to that production download. Signing keys and local credentials are excluded from source archives.
-
-/.well-known/assetlinks.json is served directly on both audioly.me and www.audioly.me without redirects. Production uses the release certificate fingerprint; the Dev entry retains its original debug certificate for compatibility.
-
-/invite/CODE preserves optional custom-server query parameters and opens Audioly from a user-activated button. The app checks whether the party is active.
-
-## Reference-style redesign
-
-The landing page now uses a split hero, dark grid, interactive feature cards, build details and a three-step install guide. Audioly logo colors drive the palette. Scroll effects include one-time card reveals, a reading progress bar and hero parallax. Pause controls and reduced-motion preferences disable decorative motion. Screenshot capture and publishing remain paused by request.
-
-Live browser verification passed at widths 360, 375, 768, 1024 and 1440; no horizontal overflow or JavaScript errors. Tested quality preview, translation toggle, crossfade slider, build details, motion controls and all download endpoints.
-
-Published APK SHA-256: 9276dae7475478caaee195dce583fc61be20da4c5815b3da0518d5a649c40c4e
-APK size: 83,724,556 bytes (79.8 MiB). Label: Audioly Dev. Package: com.dev.audioly. Android 8.0+, arm64-v8a. The VPS copy has the same hash as the verified local APK.
+See ASSET-GENERATION.md for the hero's generation prompt. Font licenses are included beside their font files.
