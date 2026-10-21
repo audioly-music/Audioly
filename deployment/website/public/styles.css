@@ -7,3 +7,5 @@
 button.track-more{border:0;color:#eee;font-family:Arial,sans-serif;font-size:15px;letter-spacing:0;padding:0;cursor:pointer}#install-guide{padding-bottom:60px}#install-guide h2{font-size:23px;margin-bottom:18px}#install-guide p{color:#888;font-size:13px;margin:12px 0;max-width:740px}
 
 .device-tabs{gap:2px;margin-top:14px}.device-tabs button{width:28px;height:28px;background:transparent!important}.device-tabs button:before{position:static;width:8px;height:8px;margin:10px;border-radius:50%;background:#49515b}.device-tabs button[aria-selected=true]:before{background:#fff}
+
+.sunflower-cover{padding:0;overflow:hidden}.sunflower-cover img{width:100%;height:100%;object-fit:cover}.track-heading>div:nth-child(2){min-width:0}.track-heading>div:nth-child(2) span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:205px}@media(max-width:600px){.track-heading>div:nth-child(2) span{max-width:136px;font-size:11px}}

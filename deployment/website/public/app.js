@@ -15,7 +15,8 @@ reducedMotion.addEventListener('change',event=>{paused=event.matches;motionState
 motionState();
 const lyricTrack = document.getElementById('lyrics-track');
 if (lyricTrack) {
-  const lines = ['Find your frequency.', 'Let the world fade away.', 'Every beat feels like home.', 'Keep the good moments close.', 'A soundtrack of your own.', 'Press play and feel more.'];
+  const lines = ["Thinking in a bad way", "Losing your grip"];
+  // Keep this promotional excerpt short; this is a silent animation, not full lyrics.
   const rows = lines.map(text => {
     const row=document.createElement('div'); row.className='demo-line';
     text.split(' ').forEach((word,index)=>{ if(index)row.append(' ');const span=document.createElement('span');span.className='demo-word';span.textContent=word;row.append(span); });
@@ -26,7 +27,7 @@ if (lyricTrack) {
   function render(){
     const slot=elapsed/3600,current=Math.floor(slot)%rows.length,progress=slot%1;
     rows.forEach(({row,words},index)=>{
-      let offset=(index-current+rows.length)%rows.length;if(offset===rows.length-1)offset=-1;
+      let offset=(index-current+rows.length)%rows.length;if(rows.length>2&&offset===rows.length-1)offset=-1;
       row.style.setProperty('--line-position',String(offset));row.dataset.current=String(offset===0);
       words.forEach((word,i)=>word.style.setProperty('--fill',`${offset<0?100:offset>0?0:Math.min(100,Math.max(0,(progress*words.length-i)*100))}%`));
     });

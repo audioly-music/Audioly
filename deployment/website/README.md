@@ -20,7 +20,7 @@ Open http://localhost:8766. Production Caddy rewrites /invite/CODE to invite.htm
 
 The dark homepage uses local Plus Jakarta Sans typography, the Audioly logo, an amber phone preview, horizontally scrolling Replay cards, a desktop preview, and artwork shelves. Download and GitHub buttons appear above the fold. Replay data and the desktop interface are clearly marked illustrations. Catalogue metadata comes from the Apple Music RSS feeds listed in assets/catalogue.json.
 
-Original demo lyrics animate word by word. Motion respects reduced-motion preferences, with explicit play/pause controls. There is no audio autoplay or microphone access. The phone also has a subtle scroll-driven perspective effect.
+A short eight-word Sunflower excerpt animates word by word in a silent preview. Motion respects reduced-motion preferences, with explicit play/pause controls. There is no audio autoplay or microphone access. The phone also has a subtle scroll-driven perspective effect.
 
 The download page contains all 16 files from the public 2.0.0 release, including Android, Windows, Linux, and Intel/Apple Silicon Mac packages. Static links work without JavaScript. GitHub's latest-release API updates matching assets and version labels when available. GitHub statistics are real release download counts and repository stars; unavailable requests retain the static fallback.
 
