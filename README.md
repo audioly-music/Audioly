@@ -15,7 +15,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/ANDROID-8.0%2B-7CF1D5?style=for-the-badge&amp;labelColor=101527" alt="Android 8.0 and newer" />
-  <img src="https://img.shields.io/badge/RELEASE-2.0.0-7584FF?style=for-the-badge&amp;labelColor=101527" alt="Audioly 2.0.0" />
+  <img src="https://img.shields.io/badge/RELEASE-2.1.0-7584FF?style=for-the-badge&amp;labelColor=101527" alt="Audioly 2.1.0" />
   <img src="https://img.shields.io/badge/LICENSE-GPL_3.0-A9B9D4?style=for-the-badge&amp;labelColor=101527" alt="GPL version 3" />
 </p>
 
