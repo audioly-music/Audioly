@@ -62,17 +62,6 @@ internal object DesktopAppUiHost : AppUiHost {
     override val swipeToPlayNext: StateFlow<Boolean> =
         MutableStateFlow(persistence.boolean(KEY_SWIPE_PLAY_NEXT, false))
 
-    private val _homeRecentsViewType = MutableStateFlow(
-        runCatching { LibraryViewType.valueOf(persistence.string(KEY_HOME_RECENTS_VIEW, LibraryViewType.LIST.name)) }
-            .getOrDefault(LibraryViewType.LIST),
-    )
-    override val homeRecentsViewType: StateFlow<LibraryViewType> = _homeRecentsViewType
-
-    override fun setHomeRecentsViewType(value: LibraryViewType) {
-        persistence.saveString(KEY_HOME_RECENTS_VIEW, value.name)
-        _homeRecentsViewType.value = value
-    }
-
     /** Nothing is pinned here: the desktop has no pin action to put anything first. */
     override val pinnedPlaylists: StateFlow<List<String>> = MutableStateFlow(emptyList())
 

@@ -3832,13 +3832,17 @@ fun AudiolyDesktopApp() {
                                         source = DesktopQueueSource(entity.title, PlaybackSourceType.SEARCH),
                                     )
                                     EntityType.ARTIST -> openArtist(entity.id, entity.title)
-                                    EntityType.ALBUM, EntityType.PLAYLIST -> openBrowseItem(
+                                    EntityType.ALBUM, EntityType.PLAYLIST, EntityType.OTHER -> openBrowseItem(
                                         BrowseItem(
                                             browseId = entity.id,
                                             title = entity.title,
                                             subtitle = entity.subtitle,
                                             thumbnailUrl = entity.artworkUrl,
-                                            type = if (entity.entityType == EntityType.ALBUM) BrowseType.ALBUM else BrowseType.PLAYLIST,
+                                            type = when (entity.entityType) {
+                                                EntityType.ALBUM -> BrowseType.ALBUM
+                                                EntityType.OTHER -> BrowseType.OTHER
+                                                else -> BrowseType.PLAYLIST
+                                            },
                                         ),
                                     )
                                 }

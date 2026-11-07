@@ -12,6 +12,7 @@ import com.music.audioly.data.lyrics.LyricsTranslation
 import com.music.audioly.data.model.Song
 import com.music.audioly.data.settings.AudioQuality
 import com.music.audioly.data.settings.LastPlayerScreen
+import com.music.audioly.data.settings.MixTransitionView
 import com.music.audioly.data.settings.MixBlend
 import com.music.audioly.data.settings.SmartAnalysis
 import com.music.audioly.data.settings.TransitionWindow
@@ -179,6 +180,11 @@ internal object DesktopPlayerHost : PlayerHost {
 internal object DesktopPlayerSettings : PlayerSettingsSource {
     private val persistence by lazy { DesktopPersistence() }
 
+    override val streamCeilingOverride = MutableStateFlow<AudioQuality?>(null)
+    override val showListenTogetherButton = MutableStateFlow(false)
+    override val automixDetail = MutableStateFlow<String?>(null)
+    override val smartMixView = MutableStateFlow<MixTransitionView?>(null)
+    override val smartMixProgress = MutableStateFlow(0f)
     override val animatedCanvas = MutableStateFlow(true)
     override val audioQualityCellular = MutableStateFlow(AudioQuality.LOSSLESS)
     override val audioQualityWifi = MutableStateFlow(AudioQuality.LOSSLESS)
@@ -253,8 +259,8 @@ private fun DesktopAudioPipeline.toOutputFormat(): OutputFormatUi {
         ?.let { "${"%.1f".format(Locale.ROOT, it / 1000f).removeSuffix(".0")} kHz" }
     return OutputFormatUi(
         summary = listOfNotNull(depth, rate).joinToString(" · "),
-        carriesHiRes = outputIsFloat == true || (outputBytesPerSample ?: 2) > 2 ||
-            (outputSampleRateHz ?: 0) > 48_000,
+        // Java Sound uses the system mixer; high sample rates do not prove bit-perfect output.
+        bitPerfect = false,
     )
 }
 
