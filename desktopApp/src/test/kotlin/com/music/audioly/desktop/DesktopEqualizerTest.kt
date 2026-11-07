@@ -110,7 +110,7 @@ class DesktopEqualizerTest {
     }
 
     /**
-     * The make-up attenuation exists so that boosting cannot run the signal past full scale. Every
+     * Partial make-up preserves the boost; the linked limiter keeps it below full scale. Every
      * band up as far as it goes is the worst case there is.
      */
     @Test
@@ -118,7 +118,7 @@ class DesktopEqualizerTest {
         val equalizer = DesktopEqualizer()
         equalizer.setTuning(true, manualCurve(List(EqLayout.MANUAL_COUNT) { EqLayout.MANUAL_RANGE_DB }), 0f)
         val peak = run(equalizer, stereoTone(400.0, amplitude = 0.75f)).maxOf { abs(it) }
-        assertTrue(peak <= 0.78f, "output peaked at $peak, above what went in")
+        assertTrue(peak <= com.music.audioly.playback.PeakLimiter.CEILING + 1e-6f, "output peaked at $peak, above the limiter ceiling")
     }
 
     @Test

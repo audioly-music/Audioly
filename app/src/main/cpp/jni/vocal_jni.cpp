@@ -34,6 +34,7 @@
 
 extern "C" {
 
+
 // Takes the two channels as separate arrays rather than one interleaved one,
 // mirroring the planar layout the front end wants and avoiding a deinterleave
 // on either side of the boundary.

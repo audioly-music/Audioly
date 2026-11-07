@@ -23,6 +23,7 @@
 #include "vocal_spectrogram.h"
 
 #include <cmath>
+#include <algorithm>
 #include <complex>
 #include <vector>
 

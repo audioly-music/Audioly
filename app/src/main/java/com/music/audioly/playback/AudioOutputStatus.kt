@@ -20,7 +20,6 @@ import com.music.audioly.playback.audio.OutputNegotiationResult
 import com.music.audioly.playback.audio.PcmEncoding
 import com.music.audioly.playback.audio.TransportType
 import com.music.audioly.playback.audio.bluetooth.BluetoothTelemetry
-import com.music.audioly.playback.audio.usb.DirectUsbProbeResult
 import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
@@ -79,7 +78,6 @@ object AudioOutputStatus {
          * off while it was working.
          */
         val dspAvailable: Boolean = true,
-        val directUsbProbe: DirectUsbProbeResult? = null,
         val directSupport: DirectAudioProbe.DirectSupport? = null,
         val directPlaybackSupported: Boolean = false,
         val directPlaybackSelected: Boolean = false,
@@ -143,7 +141,6 @@ object AudioOutputStatus {
                 dspFormat == other.dspFormat &&
 
                 dspAvailable == other.dspAvailable &&
-                directUsbProbe == other.directUsbProbe &&
                 directSupport == other.directSupport &&
                 directPlaybackSupported == other.directPlaybackSupported &&
                 directPlaybackSelected == other.directPlaybackSelected &&
@@ -185,7 +182,6 @@ object AudioOutputStatus {
             result = 31 * result + dspFormat.hashCode()
 
             result = 31 * result + dspAvailable.hashCode()
-            result = 31 * result + (directUsbProbe?.hashCode() ?: 0)
             result = 31 * result + (directSupport?.hashCode() ?: 0)
             result = 31 * result + directPlaybackSupported.hashCode()
             result = 31 * result + directPlaybackSelected.hashCode()
@@ -214,7 +210,6 @@ object AudioOutputStatus {
         preferred: AudioDeviceInfo?,
         floatEnabled: Boolean,
         routeKind: AudioRouting.Kind? = null,
-        directUsbProbe: DirectUsbProbeResult? = null,
         directSupport: DirectAudioProbe.DirectSupport? = null,
         bluetoothTelemetry: BluetoothTelemetry? = null,
         systemMixerRateHz: Int? = null,
@@ -258,24 +253,18 @@ object AudioOutputStatus {
             else -> null
         }
 
-        val isDirectUsbViable = directUsbProbe?.isViable == true && isUsbDevice
         val isDirectAudioTrack = directSupport?.isDirectSupported == true && computedRouteKind != AudioRouting.Kind.PHONE
         val transport = when {
-            isDirectUsbViable -> TransportType.DIRECT_USB
             isDirectAudioTrack -> TransportType.AUDIO_TRACK_DIRECT
             else -> TransportType.AUDIO_TRACK
         }
 
         val fallback = requestedPcmMode == OutputPcmMode.FLOAT_32 && !floatEnabled
         val (reason, detail) = when {
-            isDirectUsbViable -> Pair(FallbackReason.NONE, null)
             computedRouteKind == AudioRouting.Kind.PHONE && fallback ->
                 Pair(FallbackReason.ROUTE_LIMITATION, "Speaker output capped at 16-bit to avoid OEM mixer distortion")
             computedRouteKind == AudioRouting.Kind.USB && fallback ->
-                Pair(
-                    if (directUsbProbe?.isViable == false) FallbackReason.DIRECT_USB_UNAVAILABLE else FallbackReason.ROUTE_LIMITATION,
-                    directUsbProbe?.diagnosticReason ?: "USB route does not advertise Float32 output",
-                )
+                Pair(FallbackReason.ROUTE_LIMITATION, "USB route does not advertise Float32 output")
             computedRouteKind == AudioRouting.Kind.BLUETOOTH && fallback -> {
                 val btCode = bluetoothTelemetry?.codecName?.let { " ($it)" }.orEmpty()
                 Pair(FallbackReason.ROUTE_LIMITATION, "Bluetooth route$btCode does not advertise Float32 output")
@@ -300,8 +289,7 @@ object AudioOutputStatus {
             floatFallback = fallback,
             fallbackReason = reason,
             fallbackDetail = detail,
-            systemMixerRateHz = systemMixerRateHz ?: if (isUsbDevice && !isDirectAudioTrack && !isDirectUsbViable) 48000 else null,
-            directUsbProbe = directUsbProbe,
+            systemMixerRateHz = systemMixerRateHz ?: if (isUsbDevice && !isDirectAudioTrack) 48000 else null,
             directSupport = directSupport,
             directPlaybackSupported = directSupport?.isDirectSupported == true,
             directPlaybackSelected = isDirectAudioTrack,
@@ -318,7 +306,7 @@ object AudioOutputStatus {
             requestedTransportType = result.output.transport,
             transportType = result.output.transport,
             directPlaybackSupported = result.route.directSupport.isDirectSupported,
-            directPlaybackSelected = result.output.isDirect && result.output.transport != TransportType.DIRECT_USB,
+            directPlaybackSelected = result.output.isDirect,
             directPlaybackDetail = result.route.directSupport.description,
             directSupport = result.route.directSupport,
             deviceName = if (result.route.deviceName.isNotBlank()) result.route.deviceName else current.value.deviceName,
@@ -420,21 +408,6 @@ object AudioOutputStatus {
      * and bypassing AudioFlinger mixer, versus being rejected by AudioPolicy and placed on a MixerThread.
      */
     internal fun evaluateActualPath(snapshot: Snapshot): Snapshot {
-        // Direct USB (userspace USB stream) directly communicates with USB endpoints,
-        // bypassing Android AudioFlinger and AudioPolicy entirely.
-        if (snapshot.transportType == TransportType.DIRECT_USB ||
-            snapshot.requestedTransportType == TransportType.DIRECT_USB
-        ) {
-            return snapshot.copy(
-                transportType = TransportType.DIRECT_USB,
-                directPlaybackRequested = true,
-                directPlaybackActual = true,
-                directPlaybackRejected = false,
-                directPlaybackSelected = false,
-                systemMixerRateHz = null,
-            )
-        }
-
         val directSupport = snapshot.directSupport
             ?: snapshot.negotiationResult?.route?.directSupport
 

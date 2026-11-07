@@ -3,6 +3,7 @@ package com.music.audioly.desktop
 import com.music.audioly.playback.EqCurve
 import com.music.audioly.playback.EqLayout
 import com.music.audioly.playback.FilterKind
+import com.music.audioly.playback.PeakLimiter
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.exp
@@ -20,7 +21,7 @@ import kotlin.math.tan
  * different sounds from the same settings.
  *
  * Floats rather than 16-bit PCM: the desktop engine mixes in float all the way to the sink, so
- * there is no quantisation on the way through and no clamp on the way out. Everything else is the
+ * there is no quantisation on the way through. A linked peak limiter catches boosted overs. Everything else is the
  * same — the topology-preserving state-variable filter with Cytomic's output mixes, chosen because
  * the trapezoidal form stays well behaved at a 60 Hz cutoff where a naive biquad loses precision.
  *
@@ -39,6 +40,7 @@ internal class DesktopEqualizer {
     @Volatile
     private var target: Tuning = Tuning.OFF
 
+    private val limiter = PeakLimiter()
     private var channels = 0
     private var sampleRate = 0
 
@@ -78,6 +80,7 @@ internal class DesktopEqualizer {
         if (channels == this.channels && sampleRate == this.sampleRate) return
         this.channels = channels.coerceAtLeast(1)
         this.sampleRate = sampleRate
+        limiter.configure(sampleRate)
         state = FloatArray(this.channels * EqLayout.SLOTS * 2)
         channelGain = FloatArray(this.channels) { 1f }
         running.fill(false)
@@ -86,6 +89,7 @@ internal class DesktopEqualizer {
 
     /** Forgets what the filters were ringing with, for a seek or a fresh source. */
     fun reset() {
+        limiter.reset()
         state.fill(0f)
         running.fill(false)
         snapToTarget()
@@ -97,7 +101,10 @@ internal class DesktopEqualizer {
         val tuning = target
         // Flat *and* settled there: an equaliser that has just been switched off is still gliding
         // down, and cutting that glide short is the click it exists to avoid.
-        if (isFlat(tuning) && isSettled(tuning)) return
+        if (isFlat(tuning) && isSettled(tuning)) {
+            limiter.reset()
+            return
+        }
 
         var index = 0
         while (index < count) {
@@ -110,6 +117,8 @@ internal class DesktopEqualizer {
             var at = index
             val end = index + block_
             while (at < end) {
+                val frameStart = at
+                var peak = 0f
                 for (channel in 0 until channels) {
                     if (at >= end) break
                     var sample = block[at]
@@ -117,8 +126,11 @@ internal class DesktopEqualizer {
                         sample = section(activeSlots[slot], channel, sample)
                     }
                     block[at] = sample * channelGain[channel]
+                    peak = maxOf(peak, abs(block[at]))
                     at++
                 }
+                val gain = limiter.gainFor(peak)
+                for (sampleIndex in frameStart until at) block[sampleIndex] *= gain
             }
             flushDenormals(active)
             index = end

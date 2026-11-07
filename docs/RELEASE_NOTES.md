@@ -1,15 +1,24 @@
-Audioly 2.0.0 replaces the planned 1.10.0 release.
+# Audioly 2.1.0 — Highly recommended update
 
-- Spotify playlists, Liked Songs and playlist importing use the new integration.
-- Updated Audioly branding, including the home-page mark and transparent desktop artwork.
-- Desktop source and Windows, Linux and macOS packaging workflows.
-- Production Android installs as **Audioly**, package `com.music.audioly`.
+**We highly recommend updating to Audioly 2.1.0 for the latest playback improvements, fixes and features.**
 
-## Moving from Audioly Dev
+## What's new
 
-Audioly Dev is retired. Install **Audioly.apk** to move to production. Android must ask you to approve installation.
+- Refreshed home screen with Top Picks and mood discovery.
+- Updated player, queue controls, motion artwork and lyrics experience.
+- Video playback, quality selection, live streams and podcast browsing.
+- Expanded USB DAC and bit-perfect audio support on compatible devices.
+- Improved Automix analysis, local music handling and playlist downloads.
+- Playback, library and interface fixes carried forward since 2.0.0.
 
-Early Dev builds had no active update feed and cannot be remotely forced to install this release. Newer Dev builds with the GitHub update feed can show the release prompt; Android still requires approval. The separately supplied Dev migration APK requires the move after it is installed. It must be signed with the same key as the old Dev build. It never replaces the public production download.
+The experimental Sing/karaoke feature is not included in this release.
 
-Before moving, export settings and listening history from Dev and restore the backup in Audioly. Sign in again in the production app. Downloads, accounts and local playlists are not part of that backup; keep Dev installed until you have checked your data.
+## Update Android
 
+Download **Audioly.apk** and install it over your existing production Audioly app. Your app data is preserved; do not uninstall first. Android asks you to approve installation.
+
+Audioly checks GitHub for updates on launch. If the prompt has not appeared yet, close and reopen the app or download the APK directly from this release.
+
+## Audioly Dev users
+
+Audioly Dev is retired. Export your settings and listening history before installing production Audioly. Dev and production are separate Android applications, so accounts, downloads and local playlists do not transfer automatically. Keep Dev until you have checked your data.

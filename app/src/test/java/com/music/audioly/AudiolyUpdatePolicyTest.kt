@@ -28,4 +28,15 @@ class AudiolyUpdatePolicyTest {
         val release = Json.parseToJsonElement("""{"assets":[{"name":"Audioly.apk","state":"new","browser_download_url":"pending"}]}""").jsonObject
         assertNull(AudiolyUpdatePolicy.productionApkUrl(release))
     }
+    @Test fun phoneAndTvNeverSelectEachOthersApk() {
+        val release = Json.parseToJsonElement("""{"assets":[
+          {"name":"AudiolyTV.apk","state":"uploaded","browser_download_url":"tv"},
+          {"name":"Audioly.apk","state":"uploaded","browser_download_url":"phone"}
+        ]}""").jsonObject
+        assertEquals("phone", AudiolyUpdatePolicy.productionApkUrl(release))
+        assertEquals("tv", AudiolyUpdatePolicy.productionApkUrl(release, "AudiolyTV.apk"))
+    }
+    @Test fun unreleasedLocalBuildDoesNotOfferOlderPublicVersion() {
+        assertFalse(AudiolyUpdatePolicy.shouldOffer("2.0.0", "2.0.1", false))
+    }
 }

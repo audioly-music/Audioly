@@ -26,10 +26,10 @@ internal object AudiolyUpdatePolicy {
         else compare(latest, current) > 0
 
     /** Never send a production user to an APK for the retired Dev package. */
-    fun productionApkUrl(release: JsonObject): String? = runCatching {
+    fun productionApkUrl(release: JsonObject, assetName: String = "Audioly.apk"): String? = runCatching {
         release["assets"]?.jsonArray?.mapNotNull { it as? JsonObject }
             ?.firstOrNull {
-                it["name"]?.jsonPrimitive?.contentOrNull == "Audioly.apk" &&
+                it["name"]?.jsonPrimitive?.contentOrNull == assetName &&
                     it["state"]?.jsonPrimitive?.contentOrNull == "uploaded"
             }?.get("browser_download_url")?.jsonPrimitive?.contentOrNull
     }.getOrNull()

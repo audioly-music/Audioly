@@ -46,3 +46,7 @@ This list is automatically generated from GitHub repository contributor data.
 <!-- END CONTRIBUTORS -->
 
 Android Spotify library/import and desktop/shared modules are adapted from the upstream BitChord repository at commit 2c599a6cd7a195227a11dab5769f88da8fd08194, under GPL-3.0. Original per-file copyright and license notices remain applicable.
+
+Unreleased Audioly 2.0.1 incorporates Android, TV, Wear OS and shared changes from BitChord v1.8.1 (7d956f211b8a46a87184fd3ff87432b51a111dfa), GPL-3.0.
+
+Audioly 2.1.0 incorporates Android, TV, Wear OS and shared changes from BitChord v1.9 (04f64c9f11bd2714d01bbc6da401f146f3d9399f), GPL-3.0.

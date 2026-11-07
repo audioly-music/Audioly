@@ -105,9 +105,10 @@ object AppUpdateChecker {
      * Only the canonical production asset, `Audioly.apk`, is eligible. A release
      * without it (source-only draft, renamed asset) leaves
      * [UpdateInfo.apkUrl] null and the UI falls back to opening the releases
-     * page as before.
+     * page.
      */
-    private fun apkAssetUrl(release: JsonObject): String? = AudiolyUpdatePolicy.productionApkUrl(release)
+    private fun apkAssetUrl(release: JsonObject): String? =
+        AudiolyUpdatePolicy.productionApkUrl(release, if (BuildConfig.APPLICATION_ID.endsWith(".tv")) "AudiolyTV.apk" else "Audioly.apk")
 
     /**
      * Streams the current update's APK into the app cache, reporting progress
@@ -156,7 +157,7 @@ object AppUpdateChecker {
             }
             val archive = context.packageManager.getPackageArchiveInfo(target.absolutePath, 0)
                 ?: error("The downloaded file is not a valid Android app. Try again.")
-            check(archive.packageName == AudiolyUpdatePolicy.PRODUCTION_PACKAGE) {
+            check(archive.packageName == if (BuildConfig.APPLICATION_ID.endsWith(".tv")) "com.music.audioly.tv" else AudiolyUpdatePolicy.PRODUCTION_PACKAGE) {
                 "This download is not the Audioly production app."
             }
             check(AudiolyUpdatePolicy.compare(archive.versionName.orEmpty(), info.version) >= 0) {
@@ -188,17 +189,21 @@ object AppUpdateChecker {
      * Sideloaded apps need the user's blessing per app ("install unknown apps");
      * without it the installer intent silently does nothing on most ROMs, so
      * the user is sent to that one switch first and taps Install again after.
+     * Some TV builds have no such settings screen; there the installer is
+     * launched anyway and shows its own "not allowed" prompt with a way in.
      */
     fun installApk(context: Context, file: File) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
             !context.packageManager.canRequestPackageInstalls()
         ) {
-            context.startActivity(
-                Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
-                    .setData(Uri.parse("package:${context.packageName}"))
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
-            )
-            return
+            val opened = runCatching {
+                context.startActivity(
+                    Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
+                        .setData(Uri.parse("package:${context.packageName}"))
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                )
+            }.isSuccess
+            if (opened) return
         }
         val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
         context.startActivity(
