@@ -1,0 +1,1 @@
+Audioly Web is adapted from BitChord Web by Kushagra Singh and contributors, commit acf219a7e4a7f52f026d4336d5c7ac5cf7bfafcc, under GPL-3.0. See ../LICENSE and ../NOTICE.md. Original third-party notices remain applicable.

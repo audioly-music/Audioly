@@ -1,0 +1,19 @@
+{
+  "name": "audioly-web",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.11.2",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @audioly/app dev",
+    "dev:ext": "pnpm --filter @audioly/extension dev",
+    "dev:ext:firefox": "pnpm --filter @audioly/extension dev:firefox",
+    "build": "pnpm -r build",
+    "build:site": "pnpm --filter @audioly/extension package && pnpm --filter @audioly/app build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "fixtures": "node scripts/capture-fixtures.mjs"
+  }
+}

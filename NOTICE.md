@@ -50,3 +50,5 @@ Android Spotify library/import and desktop/shared modules are adapted from the u
 Unreleased Audioly 2.0.1 incorporates Android, TV, Wear OS and shared changes from BitChord v1.8.1 (7d956f211b8a46a87184fd3ff87432b51a111dfa), GPL-3.0.
 
 Audioly 2.1.0 incorporates Android, TV, Wear OS and shared changes from BitChord v1.9 (04f64c9f11bd2714d01bbc6da401f146f3d9399f), GPL-3.0.
+
+Audioly Web and its browser extension are adapted from BitChord Web at commit acf219a7e4a7f52f026d4336d5c7ac5cf7bfafcc (GPL-3.0).
