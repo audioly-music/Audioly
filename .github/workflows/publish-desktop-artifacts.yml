@@ -1,0 +1,44 @@
+name: Attach verified desktop downloads
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: Successful desktop build run
+        required: true
+permissions:
+  actions: read
+  contents: write
+jobs:
+  attach:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: v2.1.0
+      - name: Verify source build
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ inputs.run_id }}
+        run: |
+          [[ "$RUN_ID" =~ ^[0-9]+$ ]]
+          test "$(gh api repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID --jq .conclusion)" = success
+          test "$(gh api repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID --jq .head_sha)" = "$(git rev-parse HEAD)"
+          test "$(gh api repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID --jq .path)" = .github/workflows/desktop.yml
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.run_id }}
+          pattern: '*-artifacts'
+          merge-multiple: true
+          path: downloads
+      - name: Verify and attach downloads
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(python3 scripts/release_version.py show)
+          for suffix in linux-x86_64.AppImage linux-amd64.deb linux-x86_64.rpm windows-x64-setup.exe windows-x64.msi windows-x64-portable.zip macos-arm64.dmg macos-arm64.pkg macos-arm64.zip macos-x64.dmg macos-x64.pkg macos-x64.zip; do
+            test -s "downloads/Audioly-$version-$suffix"
+          done
+          git archive --format=zip --output="downloads/Audioly-$version-source.zip" HEAD
+          (cd downloads && sha256sum Audioly-* > Audioly-desktop-SHA256SUMS.txt)
+          gh release upload "v$version" downloads/* --clobber
