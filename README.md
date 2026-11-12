@@ -33,14 +33,12 @@ Choose your platform. Official downloads and checksums are available on the **[l
 | **Linux** | [AppImage, DEB or RPM](https://audioly.me/downloads.html#linux) | x64 |
 | **Web** | [Open Audioly](https://open.audioly.me/) | Desktop browser with the [Audioly extension](https://open.audioly.me/extension) |
 
-On Android, open the downloaded APK and allow installation from your browser or file manager when prompted. Public builds install as **Audioly**, not Audioly Dev. Desktop packages include their own Java runtime.
+On Android, open the downloaded APK and allow installation from your browser or file manager when prompted. Public builds install as **Audioly**. Desktop packages include their own Java runtime.
 
 <details>
-<summary><strong>Checksums and moving from Audioly Dev</strong></summary>
+<summary><strong>Verify your download</strong></summary>
 
 Use `Audioly.apk.sha256` for Android, `AudiolyTV-SHA256SUMS.txt` for TV, and `Audioly-desktop-SHA256SUMS.txt` for desktop downloads.
-
-The public Dev channel is retired. Export supported settings and history, install Audioly, restore your backup, and sign in again. Keep Dev until you have checked your data: downloaded audio, local playlists, and account sessions are not included in the backup. See the [migration guide](docs/PUBLISHING.md#retired-dev-channel).
 
 </details>
 
@@ -87,15 +85,9 @@ Requirements: **JDK 21** (Android bytecode targets Java 17), Android SDK **37** 
 
 On Windows, use `gradlew.bat`. Local debug APKs are written to `app/build/outputs/apk/prod/debug/`; public downloads use the signed release build.
 
-| Variant | Application ID | Purpose |
-| --- | --- | --- |
-| Dev | `com.dev.audioly` | Retired-channel migration, labelled Audioly Upgrade. |
-| Prod | `com.music.audioly` | Distribution builds. |
-
 For a production build, run `./gradlew :app:assembleProdRelease`. Configure your own `keystore.properties` from the example before distributing it; without signing configuration the release output is unsigned. Keep the same signing key for future updates.
 
 Release metadata lives in `version.properties`. See the [publishing guide](docs/PUBLISHING.md) for version bumps, signing, and release workflows.
-See the [Dev migration instructions](docs/PUBLISHING.md#retired-dev-channel) before moving an old Dev installation.
 
 ## Explore the project
 

@@ -19,10 +19,6 @@ Download **Audioly.apk** and install it over your existing production Audioly ap
 
 Audioly checks GitHub for updates on launch. If the prompt has not appeared yet, close and reopen the app or download the APK directly from this release.
 
-## Audioly Dev users
-
-Audioly Dev is retired. Export your settings and listening history before installing production Audioly. Dev and production are separate Android applications, so accounts, downloads and local playlists do not transfer automatically. Keep Dev until you have checked your data.
-
 ## Android TV
 
 Download **AudiolyTV.apk** for Android TV, Google TV or Fire TV running Android 8.0+. Smaller architecture-specific APKs are also available. TV builds use the separate `com.music.audioly.tv` package. Build, signature and 16 unit tests verified; physical-TV testing remains pending.

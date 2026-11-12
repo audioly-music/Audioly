@@ -69,7 +69,7 @@ fun DevMigrationScreen() {
         ) {
             Icon(painterResource(R.drawable.ic_logo), "Audioly", Modifier.size(64.dp), tint = MaterialTheme.colorScheme.primary)
             Text("Move to Audioly ${AudiolyUpdatePolicy.MIGRATION_VERSION}", style = MaterialTheme.typography.headlineMedium)
-            Text("Audioly Dev has been retired. Install the production app to keep listening. This update is required.")
+            Text("This preview version has been retired. Install the production app to keep listening. This update is required.")
             Text("Before moving", style = MaterialTheme.typography.titleMedium)
             Text("Save your settings and listening history, then restore the backup in Audioly. Account sign-ins, downloaded audio and local playlists are not included. Keep Dev installed until you have checked your data.")
             OutlinedButton(onClick = { backup.launch(Backup.suggestedName()) }, enabled = !backupBusy, modifier = Modifier.fillMaxWidth()) {
