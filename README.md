@@ -1,128 +1,79 @@
-<p align="center"><img src="docs/images/banner.png" alt="Audioly — Your music in full colour, with real player and queue screens" width="100%" /></p>
+<p align="center"><img src="docs/images/banner.png" alt="Audioly — Your music. In full colour." width="100%" /></p>
+
+<p align="center"><strong>Your music. In full colour.</strong><br />An open-source music player for your phone, TV, desktop, and browser.</p>
 
 <p align="center">
-  <strong>Your music. Your space. Your frequency.</strong><br />
-  Discover your next favourite. Bring your playlists. Share the moment.
+  <a href="https://audioly.me/downloads.html"><strong>Download Audioly</strong></a> &nbsp;·&nbsp;
+  <a href="https://open.audioly.me/">Web player</a> &nbsp;·&nbsp;
+  <a href="https://audioly.me/">Website</a> &nbsp;·&nbsp;
+  <a href="#the-experience">Features</a> &nbsp;·&nbsp;
+  <a href="#development">Build from source</a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/audioly-music/Audioly/releases/latest"><strong>Download for Android</strong></a> ·
-  <a href="https://audioly.me">Website</a> ·
-  <a href="#a-little-more-than-play">Features</a> ·
-  <a href="#build-it-yourself">Build</a> ·
-  <a href="docs/PUBLISHING.md">Publishing guide</a>
+  <a href="https://github.com/audioly-music/Audioly/releases/latest"><img src="https://img.shields.io/github/v/release/audioly-music/Audioly?style=flat-square&amp;color=9be8df&amp;labelColor=161b29&amp;label=latest" alt="Latest release" /></a>
+  <img src="https://img.shields.io/badge/Android-8.0%2B-a5b4fc?style=flat-square&amp;labelColor=161b29" alt="Android 8.0 or newer" />
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-c4cbdc?style=flat-square&amp;labelColor=161b29" alt="GPL-3.0 license" /></a>
 </p>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/ANDROID-8.0%2B-7CF1D5?style=for-the-badge&amp;labelColor=101527" alt="Android 8.0 and newer" />
-  <img src="https://img.shields.io/badge/RELEASE-2.1.0-7584FF?style=for-the-badge&amp;labelColor=101527" alt="Audioly 2.1.0" />
-  <img src="https://img.shields.io/badge/LICENSE-GPL_3.0-A9B9D4?style=for-the-badge&amp;labelColor=101527" alt="GPL version 3" />
-</p>
+## Meet Audioly
 
-## Find your frequency
-
-A full-screen player that follows the artwork. Playlists that feel at home. Lyrics, a flexible queue, and a library that travels with you.
-
-<p align="center">
-  <img src="docs/images/player.png" width="31%" alt="Sunflower by Post Malone and Swae Lee in the Audioly player" />
-  <img src="docs/images/queue.png" width="31%" alt="Audioly queue with Sunflower and related English pop songs" />
-  <img src="docs/images/search.png" width="31%" alt="Music search in Audioly" />
-</p>
-
-<p align="center"><sub>Player · Queue · Discovery — real Audioly screens, captured on Android.</sub></p>
-
-## A little more than play
-
-<table>
-<tr>
-<td width="50%" valign="top">
-
-### A sound of your own
-
-- Browse and search the YouTube Music catalogue.
-- Shape the flow with gapless playback and adjustable crossfade.
-- Try Automix for beat-aware transitions. **Beta.**
-- Save tracks for offline listening and play local audio.
-- Keep listening in the background or through Android Auto.
-
-</td>
-<td width="50%" valign="top">
-
-### A player that feels alive
-
-- Colours drawn from the artwork you're listening to.
-- Animated Canvas artwork when available.
-- Synchronized lyrics, including word timing where supported.
-- A flexible queue, sleep timer, and playback speed controls.
-- Equalizer access and separate Wi-Fi/mobile quality preferences.
-
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-
-### Bring your collection
-
-- Connect Spotify for playlists and Liked Songs on Android.
-- Import supported public playlist links.
-- Keep favourites, local music, and listening history close.
-- Connect supported scrobbling and presence services in settings.
-
-</td>
-<td width="50%" valign="top">
-
-### Share the moment
-
-- Create a Listen Together party with a shared queue.
-- Invite friends with a room code or an Audioly link.
-- Host your own party backend with the deployment guides.
-- Parties require a running server and a network connection.
-
-</td>
-</tr>
-</table>
-
-Lossless audio requires a compatible configured module source. Lyrics, artwork, downloads, and account access depend on provider availability.
-
-### How Spotify playback works
-
-Spotify supplies catalog and playlist information. Audioly matches those tracks to a playable YouTube source; it does **not** stream Spotify's protected audio. Track matching requires a YouTube Music lookup before playback. Private library features require connecting your Spotify account; upstream changes and rate limits can affect availability.
-
-See [Spotify integration notes](docs/SPOTIFY_INTEGRATION.md) for implementation details and current limitations. Audioly is an independent project and is not affiliated with Spotify, Apple, Google, or YouTube.
+Discover your next favourite, bring your playlists, and make the queue your own. Audioly combines an artwork-driven player, synchronized lyrics, offline listening, and shared listening parties in one place.
 
 ## Get Audioly
 
-**[Download the latest signed Android APK →](https://github.com/audioly-music/Audioly/releases/latest)**
+Choose your platform. Official downloads and checksums are available on the **[latest release](https://github.com/audioly-music/Audioly/releases/latest)**.
 
-1. Download **Audioly.apk** from the release assets.
-2. Open it and approve Android's installation request. Enable “Install unknown apps” for your browser or file manager if asked.
-3. Open **Audioly** and start listening.
+| Platform | Download | Requirements |
+| :--- | :--- | :--- |
+| **Android** | [Audioly.apk](https://github.com/audioly-music/Audioly/releases/latest/download/Audioly.apk) | Android 8.0+ |
+| **Android TV** | [AudiolyTV.apk](https://github.com/audioly-music/Audioly/releases/latest/download/AudiolyTV.apk) | Android TV 8.0+ |
+| **Windows** | [Setup, MSI or portable ZIP](https://audioly.me/downloads.html#windows) | x64 |
+| **macOS** | [DMG, PKG or ZIP](https://audioly.me/downloads.html#macos) | Apple Silicon and Intel builds |
+| **Linux** | [AppImage, DEB or RPM](https://audioly.me/downloads.html#linux) | x64 |
+| **Web** | [Open Audioly](https://open.audioly.me/) | Desktop browser with the [Audioly extension](https://open.audioly.me/extension) |
 
-Android **8.0 or newer**. Official releases install as **Audioly**, with package `com.music.audioly`. Verify downloads with the release checksum. Visit [audioly.me](https://audioly.me) for the website.
+On Android, open the downloaded APK and allow installation from your browser or file manager when prompted. Public builds install as **Audioly**, not Audioly Dev. Desktop packages include their own Java runtime.
 
-### Moving from Audioly Dev
+<details>
+<summary><strong>Checksums and moving from Audioly Dev</strong></summary>
 
-> [!IMPORTANT]
-> **The public Dev channel is retired.** Move to Audioly 2.0.0 or newer. Export your settings and listening history from Dev, install Audioly, restore the backup, and sign in again. Keep Dev until you have checked your data: downloaded audio, local playlists, and account sessions are not included in the backup.
+Use `Audioly.apk.sha256` for Android, `AudiolyTV-SHA256SUMS.txt` for TV, and `Audioly-desktop-SHA256SUMS.txt` for desktop downloads.
 
-Early Dev builds cannot receive an automatic notice because their update feed was disabled. Newer Dev builds with the GitHub feed can show an update prompt. A separate **Audioly Upgrade** helper requires migration after installation and must use the original Dev signing key. See the [migration guide](docs/PUBLISHING.md#retired-dev-channel).
+The public Dev channel is retired. Export supported settings and history, install Audioly, restore your backup, and sign in again. Keep Dev until you have checked your data: downloaded audio, local playlists, and account sessions are not included in the backup. See the [migration guide](docs/PUBLISHING.md#retired-dev-channel).
 
-## Desktop
+</details>
 
-Audioly includes a Compose desktop application for **Windows, Linux, and macOS**. Building requires **JDK 21**; packaged applications include their own runtime. The desktop workflow attaches installers and portable downloads to the matching GitHub release after all platform builds pass. See [DESKTOP.md](DESKTOP.md) for build commands. Desktop Spotify currently supports Canvas setup; the connected playlist browser is Android-only.
+## The experience
 
-| Platform | Choose your download |
-| --- | --- |
-| Android | `Audioly.apk` |
-| Windows x64 | Setup `.exe`, `.msi`, or portable `.zip` |
-| Linux x64 | `.AppImage`, `.deb`, or `.rpm` |
-| macOS Apple Silicon | `macos-arm64.dmg`, `.pkg`, or `.zip` |
-| macOS Intel | `macos-x64.dmg`, `.pkg`, or `.zip` |
-| Source | `Audioly-<version>-source.zip`; GitHub tag `.zip` or `.tar.gz` |
+<p align="center">
+  <img src="docs/images/player.png" width="31%" alt="Audioly player with Sunflower artwork" />
+  <img src="docs/images/queue.png" width="31%" alt="Audioly playback queue" />
+  <img src="docs/images/search.png" width="31%" alt="Audioly music search" />
+</p>
+<p align="center"><sub>Player · Queue · Discovery — real Audioly screens on Android.</sub></p>
 
-Use `Audioly.apk.sha256` for Android and `Audioly-desktop-SHA256SUMS.txt` for desktop verification.
+| Made for listening | Made to feel like yours |
+| :--- | :--- |
+| **Discover** — browse and search the YouTube Music catalogue. | **Immersive player** — artwork colours and animated Canvas where available. |
+| **Keep the flow** — gapless playback, crossfade, and experimental Automix. | **Follow the lyrics** — synchronized lyrics, with word timing where supported. |
+| **Bring your music** — offline downloads and local audio. | **Take control** — flexible queue, sleep timer and playback speed. |
+| **Listen together** — invite friends to a party with a shared queue. | **Connect your library** — Spotify playlists and Liked Songs on Android. |
 
-## Build it yourself
+Features vary by platform and source. Lossless playback requires a compatible configured module. Lyrics, artwork, downloads and account integrations depend on provider availability. Listen Together requires a network connection and a running server.
+
+<details>
+<summary><strong>About Spotify and the web player</strong></summary>
+
+Spotify supplies playlist and catalogue information. Audioly matches tracks to a playable YouTube source; it does not stream Spotify's protected audio. Private library access requires connecting your account. Provider changes and rate limits can affect availability. See [Spotify integration notes](docs/SPOTIFY_INTEGRATION.md).
+
+The web player needs the Audioly browser extension for playback and supported integrations. It is not an extension-free mobile web player. Follow the [extension setup guide](https://open.audioly.me/extension).
+
+Audioly is independent and is not affiliated with Spotify, Apple, Google or YouTube.
+
+</details>
+
+## Development
 
 Requirements: **JDK 21** (Android bytecode targets Java 17), Android SDK **37** (target SDK 36), and the CMake/NDK components requested by Gradle. Minimum supported Android version: **8.0 / API 26**.
 
@@ -146,30 +97,37 @@ For a production build, run `./gradlew :app:assembleProdRelease`. Configure your
 Release metadata lives in `version.properties`. See the [publishing guide](docs/PUBLISHING.md) for version bumps, signing, and release workflows.
 See the [Dev migration instructions](docs/PUBLISHING.md#retired-dev-channel) before moving an old Dev installation.
 
-## Project map
+## Explore the project
+
+| Resource | What you’ll find |
+| :--- | :--- |
+| [Desktop guide](DESKTOP.md) | Desktop builds and packaging |
+| [Web player](web/README.md) | Web development and browser extension |
+| [Addon documentation](https://audioly.me/docs/) | Extending Audioly with sources |
+| [Backend](backend/README.md) · [Deployment](deployment/README.md) | Hosting Listen Together and the website |
+| [Publishing guide](docs/PUBLISHING.md) | Signing, versioning and releases |
+| [Contributing](CONTRIBUTING.md) | Contributing code and useful bug reports |
 
 ```text
-app/          Android application, Compose UI and playback
-desktopApp/   Windows, Linux and macOS desktop application
-shared/       Shared models, networking and playback logic
-sharedUi/     Shared Compose player and UI components
-native/       Audio analysis and DSP code
-backend/      Go Listen Together server
-deployment/  Server and website configuration examples
-docs/        Integration notes, publishing guide and screenshots
+app/          Android application
+tv/          Android TV application
+desktopApp/  Windows, macOS and Linux application
+web/         Web player and browser extension
+shared/      Shared models, networking and playback logic
+sharedUi/    Shared Compose components
+native/      Audio analysis and DSP
+backend/     Listen Together server
+deployment/  Website and server configuration
 ```
-
-The party backend and website are optional for local development. See [backend documentation](backend/README.md) and [deployment instructions](deployment/README.md). Deployment requires your own infrastructure and credentials; CI never deploys automatically.
 
 ## Contributing
 
-Bug reports should include the app version, Android version, steps to reproduce, and relevant redacted logs. Avoid posting cookies, tokens, private playlists, or signing files. See [CONTRIBUTING.md](CONTRIBUTING.md).
+Found a bug or have an idea? [Open an issue](https://github.com/audioly-music/Audioly/issues). Include your app version, device or operating system, and steps to reproduce. Redact cookies, tokens and other private information from logs. Please read the [contribution guide](CONTRIBUTING.md) before submitting a pull request.
 
 ## Maintainer
 
-Audioly is developed and maintained by **Naishal Dave**.
-
-[Website](https://naishaldave.com) · [GitHub](https://github.com/davenaishal) · [LinkedIn](https://www.linkedin.com/in/naishaldave)
+Maintained by **Naishal Dave**.
+[naishaldave.com](https://naishaldave.com) · [GitHub](https://github.com/davenaishal) · [LinkedIn](https://www.linkedin.com/in/naishaldave)
 
 ## License
 
