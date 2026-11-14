@@ -7,7 +7,7 @@ function motionState() {
   document.documentElement.classList.toggle('motion-paused', paused);
   document.documentElement.classList.toggle('motion-playing', !paused);
   if (motionButton) { motionButton.textContent = paused ? 'Enable motion' : 'Pause motion'; motionButton.setAttribute('aria-pressed',String(paused)); }
-  if (lyricButton) { lyricButton.innerHTML = paused ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 11 7-11 7Z"/></svg>' : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg>'; lyricButton.setAttribute('aria-label',paused ? 'Play lyrics preview' : 'Pause lyrics preview'); lyricButton.setAttribute('aria-pressed',String(paused)); }
+  if (lyricButton) { lyricButton.textContent = paused ? 'Play preview' : 'Pause preview'; lyricButton.setAttribute('aria-label',paused ? 'Play lyrics preview' : 'Pause lyrics preview'); lyricButton.setAttribute('aria-pressed',String(paused)); }
 }
 motionButton?.addEventListener('click',()=>{paused=!paused;motionState();});
 lyricButton?.addEventListener('click',()=>{paused=!paused;motionState();});

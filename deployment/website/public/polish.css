@@ -20,3 +20,10 @@ button.track-more:hover{background:#ffffff30}button.track-more svg{width:20px;he
 .hero-actions .button{border-radius:999px;min-height:48px;padding:13px 23px;font-weight:650;box-shadow:0 1px 0 #ffffff12 inset}.hero-actions .button.secondary{background:#ffffff07;border-color:#ffffff25;box-shadow:none}
 .transport{display:none}.track-progress:before{background:#c8d9ff}.phone-controls{padding-top:4px}
 @media(max-width:700px){.phone-screen .demo-line{font-size:26px}.hero-actions .button{padding-inline:20px}}
+
+/* Match the reference player's paired heart / overflow artwork. */
+.track-heading{gap:8px}.track-heading>div:nth-child(2){flex:1;min-width:0}
+.track-heart,.track-menu{display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;border:0;border-radius:50%;background:rgb(255 255 255 / .18);color:white}
+.track-heart{margin-left:2px}.track-heart svg,.track-menu svg{width:19px;height:19px}
+.track-heart svg{fill:none;stroke:currentColor;stroke-width:2.1;stroke-linejoin:round}.track-menu svg{fill:currentColor;stroke:none}
+.preview-motion{display:block;margin:0 auto 12px;min-height:44px;padding:8px 18px;border:1px solid #ffffff28;border-radius:999px;color:#eef1fb;background:#ffffff0a;font:inherit;font-size:12px}.preview-motion:hover{background:#ffffff20}
