@@ -58,3 +58,12 @@ button.track-more:hover{background:#ffffff30}button.track-more svg{width:20px;he
 .hero .phone-device{height:660px;border-radius:44px 44px 0 0}
 .hero .phone-screen{border-radius:34px 34px 0 0}
 @media(max-width:700px){.hero .phone-stage{align-self:center;border-radius:36px 36px 0 0}.hero .phone-device{height:560px;border-radius:36px 36px 0 0}.hero .phone-screen{border-radius:27px 27px 0 0}}
+/* Subtle scroll chrome without disabling keyboard, wheel or touch scrolling. */
+html{scrollbar-width:thin;scrollbar-color:#343b4c #080a10}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#080a10}
+::-webkit-scrollbar-thumb{background:#343b4c;border-radius:99px}
+::-webkit-scrollbar-thumb:hover{background:#59647c}
+::-webkit-scrollbar-button{display:none;width:0;height:0}
+::-webkit-scrollbar-corner{background:#080a10}
+@media(forced-colors:active){html{scrollbar-color:auto}}
