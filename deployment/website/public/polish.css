@@ -30,3 +30,26 @@ button.track-more:hover{background:#ffffff30}button.track-more svg{width:20px;he
 .track-heading .track-heart,.track-heading .track-menu{display:grid;place-items:center}
 
 .phone-screen .demo-line{color:#f4f6ff;font-size:25px;line-height:1.35}.track-progress:before{width:var(--song-progress,0%)!important}
+
+/* Keep the complete hero within the opening viewport; the phone is a lyric crop. */
+.site-header{height:80px}
+.hero{height:calc(100svh - 104px);min-height:530px;max-height:720px;padding:0 48px;align-items:center}
+.hero-copy{padding:0}.hero h1{font-size:clamp(42px,4.7vw,66px)}
+.phone-stage{height:450px;margin:0 0 0 20px;align-self:center;overflow:hidden;border-radius:46px}
+.phone-device{width:300px;height:450px;border-radius:44px;padding:8px;overflow:hidden}
+.phone-screen{border-radius:34px;padding:38px 20px 0}.phone-controls{display:none}
+.phone-screen .lyrics-window{height:300px;margin-top:10px}.phone-screen .demo-line{font-size:24px}
+.hero-description{margin-top:20px}.hero-actions{margin-top:24px}.platform-line{margin-top:18px;margin-bottom:16px}
+@media(max-width:1000px) and (min-width:701px){.hero{padding-inline:28px}.hero h1{font-size:46px}.phone-stage{margin-left:0}.phone-device{width:280px}.hero-description{font-size:14px}}
+@media(max-width:700px){
+ .site-header{height:66px}.hero{height:calc(100svh - 80px);min-height:640px;max-height:850px;padding:24px 18px 0;display:flex;flex-direction:column;gap:20px}
+ .hero-copy{padding:0;flex-shrink:0}.hero .eyebrow{margin-bottom:14px;font-size:8px}.hero h1{font-size:clamp(34px,9vw,46px);letter-spacing:-1.8px}
+ .hero-description{font-size:12px;line-height:1.65;margin:13px auto 0;max-width:310px}.hero .hero-actions{margin-top:17px;gap:8px;flex-wrap:nowrap}.hero-actions .button{font-size:10px;padding:10px 14px;min-height:42px}
+ .platform-line{font-size:9px;margin:12px auto}.browser-link{font-size:11px}.browser-note{font-size:9px;margin-top:7px}
+ .phone-stage{flex:1;min-height:230px;max-height:390px;width:264px;margin:0;align-self:center;border-radius:36px 36px 0 0}
+ .phone-device{width:264px;height:390px;border-radius:36px;padding:7px}.phone-screen{padding:31px 15px 0;border-radius:27px}.phone-camera{top:14px;width:11px;height:11px}.drag-handle{margin-bottom:14px}
+ .phone-screen .lyrics-window{height:270px;margin-top:6px}.phone-screen .demo-line{font-size:22px}.track-heart,.track-menu{flex-basis:30px;width:30px;height:30px}.track-heading strong{font-size:12px}.track-heading div>span{font-size:9px}
+}
+@media(max-width:700px) and (max-height:740px){.hero{min-height:540px;gap:12px;padding-top:18px}.hero-description{display:none}.hero .eyebrow{margin-bottom:10px}.hero h1{font-size:34px}.phone-stage{min-height:210px}.hero .hero-actions{margin-top:13px}}
+@media(max-width:700px){.hero{min-height:0}.phone-stage{min-height:130px}.phone-screen .lyrics-window{margin-top:0}.phone-screen .demo-line{font-size:21px}}
+@media(max-width:700px) and (max-height:600px){.site-header{height:54px}.hero{height:calc(100svh - 66px);padding-top:15px;gap:12px}.hero .eyebrow{font-size:7px;margin-bottom:8px}.hero h1{font-size:29px}.hero .hero-actions{margin-top:12px}.hero-actions .button{min-height:38px}.hero .browser-link,.hero .browser-note{display:none}.platform-line{margin:10px auto 0}.phone-stage{min-height:130px}.phone-screen{padding-top:24px}.drag-handle{margin-bottom:10px}.phone-screen .lyrics-window{height:220px}.phone-screen .demo-line{font-size:21px}}
