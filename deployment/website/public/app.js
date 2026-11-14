@@ -1,6 +1,6 @@
 'use strict';
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-let paused = reducedMotion.matches;
+let paused = false;
 const motionButton = document.getElementById('motion-toggle');
 const lyricButton = document.getElementById('lyrics-toggle');
 function motionState() {
@@ -11,7 +11,7 @@ function motionState() {
 }
 motionButton?.addEventListener('click',()=>{paused=!paused;motionState();});
 lyricButton?.addEventListener('click',()=>{paused=!paused;motionState();});
-reducedMotion.addEventListener('change',event=>{paused=event.matches;motionState();});
+// Autoplay the silent lyric loop; the footer motion control remains available.
 motionState();
 const lyricTrack = document.getElementById('lyrics-track');
 if (lyricTrack) {
