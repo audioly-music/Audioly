@@ -53,3 +53,8 @@ button.track-more:hover{background:#ffffff30}button.track-more svg{width:20px;he
 @media(max-width:700px) and (max-height:740px){.hero{min-height:540px;gap:12px;padding-top:18px}.hero-description{display:none}.hero .eyebrow{margin-bottom:10px}.hero h1{font-size:34px}.phone-stage{min-height:210px}.hero .hero-actions{margin-top:13px}}
 @media(max-width:700px){.hero{min-height:0}.phone-stage{min-height:130px}.phone-screen .lyrics-window{margin-top:0}.phone-screen .demo-line{font-size:21px}}
 @media(max-width:700px) and (max-height:600px){.site-header{height:54px}.hero{height:calc(100svh - 66px);padding-top:15px;gap:12px}.hero .eyebrow{font-size:7px;margin-bottom:8px}.hero h1{font-size:29px}.hero .hero-actions{margin-top:12px}.hero-actions .button{min-height:38px}.hero .browser-link,.hero .browser-note{display:none}.platform-line{margin:10px auto 0}.phone-stage{min-height:130px}.phone-screen{padding-top:24px}.drag-handle{margin-bottom:10px}.phone-screen .lyrics-window{height:220px}.phone-screen .demo-line{font-size:21px}}
+/* The phone continues below the hero, which provides the clean bottom crop. */
+.hero .phone-stage{align-self:end;overflow:visible;border-radius:46px 46px 0 0;margin-bottom:-2px}
+.hero .phone-device{height:660px;border-radius:44px 44px 0 0}
+.hero .phone-screen{border-radius:34px 34px 0 0}
+@media(max-width:700px){.hero .phone-stage{align-self:center;border-radius:36px 36px 0 0}.hero .phone-device{height:560px;border-radius:36px 36px 0 0}.hero .phone-screen{border-radius:27px 27px 0 0}}
