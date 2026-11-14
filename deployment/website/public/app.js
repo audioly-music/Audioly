@@ -7,7 +7,7 @@ function motionState() {
   document.documentElement.classList.toggle('motion-paused', paused);
   document.documentElement.classList.toggle('motion-playing', !paused);
   if (motionButton) { motionButton.textContent = paused ? 'Enable motion' : 'Pause motion'; motionButton.setAttribute('aria-pressed',String(paused)); }
-  if (lyricButton) { lyricButton.textContent = paused ? '▶' : 'Ⅱ'; lyricButton.setAttribute('aria-label',paused ? 'Play lyrics preview' : 'Pause lyrics preview'); lyricButton.setAttribute('aria-pressed',String(paused)); }
+  if (lyricButton) { lyricButton.innerHTML = paused ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 11 7-11 7Z"/></svg>' : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg>'; lyricButton.setAttribute('aria-label',paused ? 'Play lyrics preview' : 'Pause lyrics preview'); lyricButton.setAttribute('aria-pressed',String(paused)); }
 }
 motionButton?.addEventListener('click',()=>{paused=!paused;motionState();});
 lyricButton?.addEventListener('click',()=>{paused=!paused;motionState();});
@@ -17,19 +17,33 @@ const lyricTrack = document.getElementById('lyrics-track');
 if (lyricTrack) {
   const lines = ["Thinking in a bad way", "Losing your grip"];
   // Keep this promotional excerpt short; this is a silent animation, not full lyrics.
-  const rows = lines.map(text => {
+  // Six physical rows recycle outside the masked viewport, never across it.
+  const rows = Array.from({length:6}, (_,index) => {
     const row=document.createElement('div'); row.className='demo-line';
-    text.split(' ').forEach((word,index)=>{ if(index)row.append(' ');const span=document.createElement('span');span.className='demo-word';span.textContent=word;row.append(span); });
+    row.setAttribute('aria-hidden','true');
+    lines[index % lines.length].split(' ').forEach((word,i)=>{if(i)row.append(' ');const span=document.createElement('span');span.className='demo-word';span.textContent=word;row.append(span);});
     lyricTrack.append(row);return {row,words:[...row.children]};
   });
+  lyricTrack.setAttribute('aria-label','Short Sunflower lyrics preview');
   let elapsed=700,last=performance.now(),inView=true;
   if('IntersectionObserver' in window)new IntersectionObserver(entries=>{inView=entries[0].isIntersecting;}).observe(lyricTrack);
   function render(){
-    const slot=elapsed/3600,current=Math.floor(slot)%rows.length,progress=slot%1;
+    const slot=elapsed/4200,current=Math.floor(slot),progress=slot%1;
+    const t=Math.max(0,Math.min(1,(progress-.68)/.32));
+    const glide=t*t*t*(t*(t*6-15)+10);
     rows.forEach(({row,words},index)=>{
-      let offset=(index-current+rows.length)%rows.length;if(rows.length>2&&offset===rows.length-1)offset=-1;
-      row.style.setProperty('--line-position',String(offset));row.dataset.current=String(offset===0);
-      words.forEach((word,i)=>word.style.setProperty('--fill',`${offset<0?100:offset>0?0:Math.min(100,Math.max(0,(progress*words.length-i)*100))}%`));
+      const offset=((index-current+600000)%6+2)%6-2;
+      const position=offset-glide;
+      const distance=Math.abs(position);
+      row.style.transform=`translate3d(0,${88+position*112}px,0) scale(${1-Math.min(distance,2)*.045})`;
+      row.style.opacity=String(Math.max(0,1-distance*.57));
+      row.style.filter=`blur(${Math.min(distance,2)*1.2}px)`;
+      row.dataset.current=String(offset===0);
+      words.forEach((word,i)=>{
+        const fill=offset<0?1:offset>0?0:Math.min(1,Math.max(0,progress/.7*words.length-i));
+        word.style.setProperty('--fill',`${fill*100}%`);
+        word.style.transform=`translateY(${-Math.sin(fill*Math.PI)*2.5}px)`;
+      });
     });
   }
   render();
