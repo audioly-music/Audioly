@@ -15,41 +15,50 @@ lyricButton?.addEventListener('click',()=>{paused=!paused;motionState();});
 motionState();
 const lyricTrack = document.getElementById('lyrics-track');
 if (lyricTrack) {
-  const lines = ["Thinking in a bad way", "Losing your grip"];
-  // Keep this promotional excerpt short; this is a silent animation, not full lyrics.
-  // Six physical rows recycle outside the masked viewport, never across it.
-  const rows = Array.from({length:6}, (_,index) => {
-    const row=document.createElement('div'); row.className='demo-line';
-    row.setAttribute('aria-hidden','true');
-    lines[index % lines.length].split(' ').forEach((word,i)=>{if(i)row.append(' ');const span=document.createElement('span');span.className='demo-word';span.textContent=word;row.append(span);});
-    lyricTrack.append(row);return {row,words:[...row.children]};
+  // Line timings and text supplied by the site owner. No word timings were supplied.
+  const lines = [{"time": 3820, "text": "Ayy, ayy, ayy, ayy (ooh)"}, {"time": 8750, "text": "Ooh, ooh, ooh, oooh (ooh)"}, {"time": 14360, "text": "Ayy, ayy"}, {"time": 19380, "text": "Ooh, ooh, ooh, oooh"}, {"time": 23890, "text": ""}, {"time": 26990, "text": "Needless to say, I keep her in check"}, {"time": 29480, "text": "She was all bad-bad, nevertheless (yeah)"}, {"time": 32420, "text": "Callin' it quits now, baby, I'm a wreck (wreck)"}, {"time": 35220, "text": "Crash at my place, baby, you're a wreck (wreck)"}, {"time": 37480, "text": "Needless to say, I'm keeping her in check"}, {"time": 40080, "text": "She was all bad-bad, nevertheless"}, {"time": 43000, "text": "Callin' it quits now, baby, I'm a wreck"}, {"time": 45610, "text": "Crash at my place, baby, you're a wreck"}, {"time": 48270, "text": "Thinkin' in a bad way, losin' your grip"}, {"time": 50830, "text": "Screamin' at my face, baby, don't trip"}, {"time": 53570, "text": "Someone took a big L, don't know how that felt"}, {"time": 56220, "text": "Lookin' at you sideways, party on tilt"}, {"time": 59060, "text": "Ooh-ooh, some things you just can't refuse"}, {"time": 64150, "text": "She wanna ride me like a cruise"}, {"time": 66580, "text": "And I'm not tryna lose"}, {"time": 70470, "text": "Then you're left in the dust"}, {"time": 73270, "text": "Unless I stuck by ya"}, {"time": 75870, "text": "You're the sunflower"}, {"time": 78870, "text": "I think your love would be too much"}, {"time": 81120, "text": "Or you'll be left in the dust"}, {"time": 84010, "text": "Unless I stuck by ya"}, {"time": 86460, "text": "You're the sunflower"}, {"time": 89150, "text": "You're the sunflower"}, {"time": 91290, "text": "Every time I'm leavin' on ya"}, {"time": 93760, "text": "You don't make it easy, no, no"}, {"time": 96690, "text": "Wish I could be there for ya"}, {"time": 99330, "text": "Give me a reason to go"}, {"time": 102490, "text": "Every time I'm walkin' out"}, {"time": 104240, "text": "I can hear you tellin' me to turn around"}, {"time": 107190, "text": "Fightin' for my trust and you won't back down"}, {"time": 109750, "text": "Even if we gotta risk it all right now, oh"}, {"time": 112830, "text": "I know you're scared of the unknown (known)"}, {"time": 115270, "text": "You don't wanna be alone (alone)"}, {"time": 117970, "text": "I know I always come and go (and go)"}, {"time": 120450, "text": "But it's out of my control"}, {"time": 123560, "text": "And you'll be left in the dust"}, {"time": 126770, "text": "Unless I stuck by ya"}, {"time": 129460, "text": "You're the sunflower"}, {"time": 132160, "text": "I think your love would be too much"}, {"time": 134420, "text": "Or you'll be left in the dust"}, {"time": 137400, "text": "Unless I stuck by ya"}, {"time": 139430, "text": "You're the sunflower"}, {"time": 142450, "text": "You're the sunflower"}, {"time": 144750, "text": "Yeah"}, {"time": 146730, "text": ""}];
+  const duration = lines.at(-1).time + 2000;
+  const rows = lines.map(line => {
+    const row=document.createElement('div');row.className='demo-line';
+    row.textContent=line.text || '♪'; row.setAttribute('aria-hidden','true');
+    lyricTrack.append(row);return row;
   });
-  lyricTrack.setAttribute('aria-label','Short Sunflower lyrics preview');
-  let elapsed=700,last=performance.now(),inView=true;
+  lyricTrack.setAttribute('aria-label','Sunflower lyrics, timed from supplied LRC');
+  let elapsed=0,last=performance.now(),inView=true,current=-2,from=0,target=0,scroll=0,changedAt=0;
+  let offsets=[];
+  const measure=()=>{let y=0;offsets=rows.map(row=>{const top=y;y+=Math.max(44,row.getBoundingClientRect().height)+30;return top;});target=offsets[Math.max(0,current)]||0;};
+  measure();document.fonts?.ready.then(measure);addEventListener('resize',measure);
+  if('ResizeObserver' in window)new ResizeObserver(measure).observe(lyricTrack);
   if('IntersectionObserver' in window)new IntersectionObserver(entries=>{inView=entries[0].isIntersecting;}).observe(lyricTrack);
+  const timeLabels=document.querySelectorAll('.track-times span');
+  const progressBar=document.querySelector('.track-progress');
+  const clock=ms=>`${Math.floor(ms/60000)}:${String(Math.floor(ms/1000)%60).padStart(2,'0')}`;
   function render(){
-    const slot=elapsed/4200,current=Math.floor(slot),progress=slot%1;
-    const t=Math.max(0,Math.min(1,(progress-.68)/.32));
-    const glide=t*t*t*(t*(t*6-15)+10);
-    rows.forEach(({row,words},index)=>{
-      const offset=((index-current+600000)%6+2)%6-2;
-      const position=offset-glide;
-      const distance=Math.abs(position);
-      row.style.transform=`translate3d(0,${88+position*112}px,0) scale(${1-Math.min(distance,2)*.045})`;
-      row.style.opacity=String(Math.max(0,1-distance*.57));
-      row.style.filter=`blur(${Math.min(distance,2)*1.2}px)`;
-      row.dataset.current=String(offset===0);
-      words.forEach((word,i)=>{
-        const fill=offset<0?1:offset>0?0:Math.min(1,Math.max(0,progress/.7*words.length-i));
-        word.style.setProperty('--fill',`${fill*100}%`);
-        word.style.transform=`translateY(${-Math.sin(fill*Math.PI)*2.5}px)`;
-      });
+    let active=-1;for(let i=0;i<lines.length&&lines[i].time<=elapsed;i++)active=i;
+    if(active!==current){current=active;from=scroll;target=offsets[Math.max(0,active)]||0;changedAt=elapsed;}
+    const t=Math.min(1,Math.max(0,(elapsed-changedAt)/700));
+    scroll=from+(target-from)*(1-Math.pow(1-t,4));
+    rows.forEach((row,index)=>{
+      const y=80+offsets[index]-scroll;
+      row.style.transform=`translate3d(0,${y}px,0)`;
+      row.style.opacity=index===active?'1':'.28';
+      row.style.filter=index===active?'blur(0)':'blur(1px)';
+      row.style.visibility=y < -200 || y > 420?'hidden':'visible';
+      row.dataset.current=String(index===active);
     });
+    if(timeLabels.length===3){timeLabels[0].textContent=clock(elapsed);timeLabels[1].textContent='Sunflower · silent animation';timeLabels[2].textContent='−'+clock(duration-elapsed);}
+    progressBar?.style.setProperty('--song-progress',`${elapsed/duration*100}%`);
   }
   render();
-  function advance(now){const delta=Math.min(100,now-last);last=now;if(!paused&&!document.hidden&&inView){elapsed+=delta;render();}requestAnimationFrame(advance);}
+  function advance(now){
+    const delta=now-last;last=now;
+    if(!paused&&!document.hidden&&inView){elapsed+=delta;if(elapsed>=duration){elapsed%=duration;current=-2;scroll=from=target=0;}render();}
+    requestAnimationFrame(advance);
+  }
+  document.addEventListener('visibilitychange',()=>{last=performance.now();});
   requestAnimationFrame(advance);
 }
+
 const hero=document.querySelector('.hero');let frame=0;
 function scrollEffect(){frame=0;if(paused||!hero)return;const offset=Math.min(1,Math.max(0,-hero.getBoundingClientRect().top/700));hero.style.setProperty('--hero-turn',`${offset*5}deg`);hero.style.setProperty('--hero-lift',`${offset*-22}px`);}
 addEventListener('scroll',()=>{if(!frame)frame=requestAnimationFrame(scrollEffect);},{passive:true});

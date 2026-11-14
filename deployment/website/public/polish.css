@@ -28,3 +28,5 @@ button.track-more:hover{background:#ffffff30}button.track-more svg{width:20px;he
 .track-heart svg{fill:none;stroke:currentColor;stroke-width:2.1;stroke-linejoin:round}.track-menu svg{fill:currentColor;stroke:none}
 .preview-motion{display:block;margin:0 auto 12px;min-height:44px;padding:8px 18px;border:1px solid #ffffff28;border-radius:999px;color:#eef1fb;background:#ffffff0a;font:inherit;font-size:12px}.preview-motion:hover{background:#ffffff20}
 .track-heading .track-heart,.track-heading .track-menu{display:grid;place-items:center}
+
+.phone-screen .demo-line{color:#f4f6ff;font-size:25px;line-height:1.35}.track-progress:before{width:var(--song-progress,0%)!important}
